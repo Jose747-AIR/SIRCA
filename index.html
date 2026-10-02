@@ -7260,24 +7260,31 @@ async function registrarEntradaUsuario(
   usuario
 ) {
 
-  if (
-    esAdministrador
-  ) {
+  if (esAdministrador) {
 
-    mostrarMensaje(
-      "Esta función corresponde al panel del usuario.",
-      "error"
+    throw new Error(
+      "Esta función es exclusiva del panel de usuario."
     );
 
-    return;
+  }
+
+
+  const authUser =
+    auth.currentUser;
+
+
+  if (!authUser) {
+
+    throw new Error(
+      "La sesión de Firebase ya no está activa."
+    );
 
   }
 
 
   if (
     !usuarioLogueado ||
-    usuario.id !==
-      usuarioLogueado.id
+    usuario.id !== usuarioLogueado.id
   ) {
 
     throw new Error(
@@ -7316,9 +7323,7 @@ async function registrarEntradaUsuario(
           );
 
 
-        if (
-          !usuarioSnap.exists()
-        ) {
+        if (!usuarioSnap.exists()) {
 
           throw new Error(
             "Tu usuario no existe."
@@ -7331,24 +7336,61 @@ async function registrarEntradaUsuario(
           usuarioSnap.data();
 
 
+        /*
+          Verificamos que el documento corresponda
+          al usuario autenticado.
+        */
+
+        if (
+          datos.uid &&
+          datos.uid !== authUser.uid
+        ) {
+
+          throw new Error(
+            "Este perfil no corresponde a tu cuenta."
+          );
+
+        }
+
+
+        const correoPerfil =
+          (datos.correo || "")
+            .trim()
+            .toLowerCase();
+
+
+        const correoAuth =
+          (authUser.email || "")
+            .trim()
+            .toLowerCase();
+
+
+        if (
+          correoPerfil !== correoAuth
+        ) {
+
+          throw new Error(
+            "El correo de tu cuenta no coincide con el perfil SIRCA."
+          );
+
+        }
+
+
         const solicitadas =
           Number(
-            datos.horasSolicitadas ||
-            0
+            datos.horasSolicitadas || 0
           );
 
 
         const acumuladas =
           Number(
-            datos.horasAcumuladas ||
-            0
+            datos.horasAcumuladas || 0
           );
 
 
         if (
           solicitadas > 0 &&
-          acumuladas >=
-            solicitadas
+          acumuladas >= solicitadas
         ) {
 
           throw new Error(
@@ -7382,16 +7424,16 @@ async function registrarEntradaUsuario(
           {
 
             usuarioId:
-              datos.id ||
               usuario.id,
 
+            usuarioUid:
+              authUser.uid,
+
             nombre:
-              datos.nombre ||
-              "",
+              datos.nombre || "",
 
             correo:
-              datos.correo ||
-              "",
+              correoPerfil,
 
             fecha:
               ahora.toLocaleDateString(
@@ -7435,6 +7477,9 @@ async function registrarEntradaUsuario(
           usuarioRef,
           {
 
+            uid:
+              authUser.uid,
+
             dentro:
               true,
 
@@ -7455,14 +7500,6 @@ async function registrarEntradaUsuario(
     );
 
 
-    actualizarPerfilUsuario(
-      {
-        ...usuarioLogueado,
-        dentro: true
-      }
-    );
-
-
   } catch (error) {
 
     console.error(
@@ -7470,18 +7507,24 @@ async function registrarEntradaUsuario(
       error
     );
 
+
     mostrarMensaje(
+      "No se pudo registrar la entrada: " +
+      (
+        error.code
+          ? error.code + " - "
+          : ""
+      ) +
       error.message,
       "error"
     );
+
 
     throw error;
 
   }
 
 }
-
-
 /* =====================================================
    SALIDA USUARIO
 ===================================================== */
@@ -7490,24 +7533,31 @@ async function registrarSalidaUsuario(
   usuario
 ) {
 
-  if (
-    esAdministrador
-  ) {
+  if (esAdministrador) {
 
-    mostrarMensaje(
-      "Esta función corresponde al panel del usuario.",
-      "error"
+    throw new Error(
+      "Esta función es exclusiva del panel de usuario."
     );
 
-    return;
+  }
+
+
+  const authUser =
+    auth.currentUser;
+
+
+  if (!authUser) {
+
+    throw new Error(
+      "La sesión de Firebase ya no está activa."
+    );
 
   }
 
 
   if (
     !usuarioLogueado ||
-    usuario.id !==
-      usuarioLogueado.id
+    usuario.id !== usuarioLogueado.id
   ) {
 
     throw new Error(
@@ -7537,9 +7587,7 @@ async function registrarSalidaUsuario(
           );
 
 
-        if (
-          !usuarioSnap.exists()
-        ) {
+        if (!usuarioSnap.exists()) {
 
           throw new Error(
             "Tu usuario no existe."
@@ -7550,6 +7598,41 @@ async function registrarSalidaUsuario(
 
         const datos =
           usuarioSnap.data();
+
+
+        if (
+          datos.uid &&
+          datos.uid !== authUser.uid
+        ) {
+
+          throw new Error(
+            "Este perfil no corresponde a tu cuenta."
+          );
+
+        }
+
+
+        const correoPerfil =
+          (datos.correo || "")
+            .trim()
+            .toLowerCase();
+
+
+        const correoAuth =
+          (authUser.email || "")
+            .trim()
+            .toLowerCase();
+
+
+        if (
+          correoPerfil !== correoAuth
+        ) {
+
+          throw new Error(
+            "El correo de tu cuenta no coincide con el perfil SIRCA."
+          );
+
+        }
 
 
         if (
@@ -7578,9 +7661,7 @@ async function registrarSalidaUsuario(
           );
 
 
-        if (
-          !asistenciaSnap.exists()
-        ) {
+        if (!asistenciaSnap.exists()) {
 
           throw new Error(
             "No se encontró tu asistencia abierta."
@@ -7597,9 +7678,7 @@ async function registrarSalidaUsuario(
           asistencia.entradaTimestamp;
 
 
-        if (
-          !entradaTimestamp
-        ) {
+        if (!entradaTimestamp) {
 
           throw new Error(
             "La entrada no tiene una fecha válida."
@@ -7637,8 +7716,7 @@ async function registrarSalidaUsuario(
 
         const acumuladas =
           Number(
-            datos.horasAcumuladas ||
-            0
+            datos.horasAcumuladas || 0
           );
 
 
@@ -7705,14 +7783,6 @@ async function registrarSalidaUsuario(
     );
 
 
-    actualizarPerfilUsuario(
-      {
-        ...usuarioLogueado,
-        dentro: false
-      }
-    );
-
-
   } catch (error) {
 
     console.error(
@@ -7720,18 +7790,24 @@ async function registrarSalidaUsuario(
       error
     );
 
+
     mostrarMensaje(
+      "No se pudo registrar la salida: " +
+      (
+        error.code
+          ? error.code + " - "
+          : ""
+      ) +
       error.message,
       "error"
     );
+
 
     throw error;
 
   }
 
 }
-
-
 /* =====================================================
    ENTRADA MANUAL
 ===================================================== */
@@ -8533,10 +8609,34 @@ async function iniciarUsuario() {
 
   try {
 
-    const correo =
-      usuarioLogueado.email
+    const usuarioAuth =
+      auth.currentUser;
+
+    if (!usuarioAuth) {
+
+      throw new Error(
+        "No existe una sesión de Firebase Authentication."
+      );
+
+    }
+
+
+    const uidAuth =
+      usuarioAuth.uid;
+
+    const correoAuth =
+      (usuarioAuth.email || "")
         .trim()
         .toLowerCase();
+
+
+    if (!correoAuth) {
+
+      throw new Error(
+        "La cuenta de Firebase no tiene correo electrónico."
+      );
+
+    }
 
 
     const usuariosRef =
@@ -8552,7 +8652,7 @@ async function iniciarUsuario() {
         where(
           "correo",
           "==",
-          correo
+          correoAuth
         ),
         limit(1)
       );
@@ -8581,15 +8681,98 @@ async function iniciarUsuario() {
       snapshot.docs[0];
 
 
+    const usuarioData =
+      docSnap.data();
+
+
+    /*
+      Conservamos SIEMPRE el UID de Authentication.
+    */
+
     usuarioLogueado =
       {
 
         id:
           docSnap.id,
 
-        ...docSnap.data()
+        uid:
+          uidAuth,
+
+        ...usuarioData
 
       };
+
+
+    /*
+      Guardamos el UID en el documento de SIRCA.
+      Esto permite que Firestore identifique
+      inequívocamente al propietario.
+    */
+
+    try {
+
+      const usuarioRef =
+        doc(
+          db,
+          "usuarios",
+          docSnap.id
+        );
+
+
+      await runTransaction(
+        db,
+        async transaction => {
+
+          const actual =
+            await transaction.get(
+              usuarioRef
+            );
+
+
+          if (
+            !actual.exists()
+          ) {
+
+            throw new Error(
+              "El usuario SIRCA ya no existe."
+            );
+
+          }
+
+
+          const datosActuales =
+            actual.data();
+
+
+          if (
+            datosActuales.uid !==
+            uidAuth
+          ) {
+
+            transaction.update(
+              usuarioRef,
+              {
+
+                uid:
+                  uidAuth
+
+              }
+            );
+
+          }
+
+        }
+      );
+
+
+    } catch (errorUID) {
+
+      console.warn(
+        "No se pudo asociar UID al perfil:",
+        errorUID
+      );
+
+    }
 
 
     cargarPerfilUsuario();
@@ -8620,7 +8803,6 @@ async function iniciarUsuario() {
 
 }
 
-
 /* =====================================================
    PERFIL USUARIO
 ===================================================== */
@@ -8633,6 +8815,7 @@ function cargarPerfilUsuario() {
 
   if (!usuario)
     return;
+
 
 
   document
@@ -8975,11 +9158,25 @@ function escucharPerfilUsuario(
         }
 
 
+        /*
+          IMPORTANTE:
+          Conservamos el UID de Firebase Authentication.
+        */
+
+        const uidAuth =
+          auth.currentUser?.uid ||
+          usuarioLogueado?.uid ||
+          "";
+
+
         usuarioLogueado =
           {
 
             id:
               snapshot.id,
+
+            uid:
+              uidAuth,
 
             ...snapshot.data()
 
@@ -9004,8 +9201,6 @@ function escucharPerfilUsuario(
     );
 
 }
-
-
 /* =====================================================
    HISTORIAL DEL USUARIO
 ===================================================== */
