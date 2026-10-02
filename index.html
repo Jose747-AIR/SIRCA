@@ -275,6 +275,12 @@
       opacity: .92;
     }
 
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+      transform: none;
+    }
+
     .btn-primary {
       background: #155b91;
       color: white;
@@ -980,6 +986,110 @@
       color: #d97706;
     }
 
+    /* =====================================================
+       PANEL DE ASISTENCIA USUARIO
+    ===================================================== */
+
+    #panelUsuario .attendance-card {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          145deg,
+          #ffffff,
+          #f8fbfd
+        );
+    }
+
+    #panelUsuario .attendance-card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      right: -95px;
+      top: -110px;
+      background: rgba(21,91,145,.04);
+    }
+
+    #panelUsuario .attendance-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #panelUsuario .attendance-icon {
+      width: 45px;
+      height: 45px;
+      min-width: 45px;
+      border-radius: 14px;
+      background:
+        linear-gradient(
+          145deg,
+          #e8f3f9,
+          #d9ebf6
+        );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      color: #155b91;
+    }
+
+    #panelUsuario .attendance-description {
+      margin: 2px 0 0;
+      color: #718096;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    #panelUsuario .attendance-status {
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    #panelUsuario .attendance-status.fuera {
+      color: #991b1b;
+      background: #fff0f0;
+      border: 1px solid #f3c5c2;
+    }
+
+    #panelUsuario .attendance-status.dentro {
+      color: #166534;
+      background: #e5f8ed;
+      border: 1px solid #b9e8ca;
+    }
+
+    #panelUsuario .attendance-button {
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      padding: 15px 18px;
+      border-radius: 13px;
+      font-size: 14px;
+      letter-spacing: .1px;
+      box-shadow:
+        0 7px 18px rgba(21,91,145,.16);
+    }
+
+    #panelUsuario .attendance-help {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      color: #718096;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       HISTORIAL USUARIO
+    ===================================================== */
+
     #panelUsuario .history-card {
       overflow: hidden;
     }
@@ -1061,7 +1171,7 @@
     }
 
     /* =====================================================
-       LECTOR QR - NUEVO
+       LECTOR QR
     ===================================================== */
 
     #modalScanner {
@@ -1530,6 +1640,15 @@
       .scanner-frame {
         width: 205px;
         height: 205px;
+      }
+
+      #panelUsuario .attendance-card .card-header {
+        align-items: flex-start;
+      }
+
+      #panelUsuario .attendance-status {
+        font-size: 10px;
+        padding: 6px 9px;
       }
 
     }
@@ -2379,6 +2498,68 @@
     </div>
 
 
+    <!-- =================================================
+         LECTOR QR DEL USUARIO
+    ================================================= -->
+
+    <div class="card attendance-card">
+
+      <div class="card-header">
+
+        <div class="attendance-title">
+
+          <div class="attendance-icon">
+            📷
+          </div>
+
+          <div>
+
+            <h2>
+              Registrar asistencia
+            </h2>
+
+            <p class="attendance-description">
+              Escanea el código QR autorizado para registrar tu entrada o salida.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="estadoScannerUsuario"
+          class="attendance-status fuera">
+
+          ● Fuera
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="btn-primary attendance-button"
+        onclick="abrirScannerUsuario()">
+
+        📷 Escanear QR de asistencia
+
+      </button>
+
+
+      <div class="attendance-help">
+
+        <span>🔐</span>
+
+        <span>
+          La entrada o salida se determina automáticamente según tu estado actual.
+        </span>
+
+      </div>
+
+    </div>
+
+
     <div class="card history-card">
 
       <div class="card-header">
@@ -2466,11 +2647,11 @@
 
         <div>
 
-          <h2>
+          <h2 id="scannerTitulo">
             Escanear código QR
           </h2>
 
-          <p>
+          <p id="scannerSubtitulo">
             Acerca el código al recuadro
           </p>
 
@@ -2952,6 +3133,8 @@ let linternaActiva = false;
 
 let procesandoQR = false;
 
+let modoScanner = "admin";
+
 
 /* =====================================================
    COLORES
@@ -3213,6 +3396,8 @@ async function cerrarSesion() {
     usuarioLogueado = null;
 
     esAdministrador = false;
+
+    modoScanner = "admin";
 
 
     await signOut(auth);
@@ -3750,16 +3935,12 @@ function mostrarUsuarios() {
 
           ${
             usuario.dentro
-
             ?
-
             `<span
               class="status status-dentro">
               ● Dentro
             </span>`
-
             :
-
             `<span
               class="status status-fuera">
               ● Fuera
@@ -4398,10 +4579,60 @@ async function iniciarCamara(
 
 
 /* =====================================================
+   PREPARAR TITULO DEL SCANNER
+===================================================== */
+
+function actualizarTituloScanner() {
+
+  const titulo =
+    document.getElementById(
+      "scannerTitulo"
+    );
+
+  const subtitulo =
+    document.getElementById(
+      "scannerSubtitulo"
+    );
+
+
+  if (
+    modoScanner ===
+    "usuario"
+  ) {
+
+    titulo.textContent =
+      "Registrar asistencia";
+
+    subtitulo.textContent =
+      "Escanea el QR autorizado";
+
+  } else {
+
+    titulo.textContent =
+      "Escanear código QR";
+
+    subtitulo.textContent =
+      "Acerca el código al recuadro";
+
+  }
+
+}
+
+
+/* =====================================================
    ABRIR SCANNER
 ===================================================== */
 
-async function abrirScanner() {
+async function abrirScanner(
+  modo = "admin"
+) {
+
+  modoScanner =
+    modo;
+
+
+  actualizarTituloScanner();
+
 
   const modal =
     document.getElementById(
@@ -4422,6 +4653,10 @@ async function abrirScanner() {
     false;
 
 
+  camaraActualIndex =
+    0;
+
+
   const resultado =
     document.getElementById(
       "scannerResultado"
@@ -4436,6 +4671,22 @@ async function abrirScanner() {
   document
     .getElementById(
       "scannerPermission"
+    )
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById(
+      "btnLinterna"
+    )
+    .textContent =
+      "🔦 Linterna";
+
+
+  document
+    .getElementById(
+      "btnLinterna"
     )
     .classList
     .remove("active");
@@ -4488,6 +4739,115 @@ async function abrirScanner() {
 
 }
 
+
+async function abrirScannerUsuario() {
+
+  if (
+    esAdministrador
+  ) {
+
+    mostrarMensaje(
+      "Esta opción corresponde al panel del usuario.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !usuarioLogueado ||
+    !usuarioLogueado.id
+  ) {
+
+    mostrarMensaje(
+      "No fue posible identificar tu usuario.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  await abrirScanner(
+    "usuario"
+  );
+
+}
+
+
+window.abrirScannerUsuario =
+  abrirScannerUsuario;
+
+
+/* =====================================================
+   DETENER SCANNER SIN CERRAR MODAL
+===================================================== */
+
+async function detenerScannerManteniendoModal() {
+
+  if (
+    scanner &&
+    scannerActivo
+  ) {
+
+    try {
+
+      await scanner.stop();
+
+    } catch (error) {
+
+      console.error(
+        "Error deteniendo scanner:",
+        error
+      );
+
+    }
+
+
+    try {
+
+      await scanner.clear();
+
+    } catch (error) {
+
+      console.error(
+        "Error limpiando scanner:",
+        error
+      );
+
+    }
+
+  }
+
+
+  scanner = null;
+
+  scannerActivo =
+    false;
+
+
+  const reader =
+    document.getElementById(
+      "reader"
+    );
+
+
+  if (reader) {
+
+    reader.innerHTML =
+      "";
+
+  }
+
+}
+
+
+/* =====================================================
+   CERRAR SCANNER
+===================================================== */
 
 async function cerrarScanner() {
 
@@ -4584,6 +4944,29 @@ async function cerrarScanner() {
     "● Escaneando...",
     "scanning"
   );
+
+
+  document
+    .getElementById(
+      "btnLinterna"
+    )
+    .textContent =
+      "🔦 Linterna";
+
+
+  document
+    .getElementById(
+      "btnLinterna"
+    )
+    .classList
+    .remove("active");
+
+
+  modoScanner =
+    "admin";
+
+
+  actualizarTituloScanner();
 
 }
 
@@ -5016,10 +5399,182 @@ function mostrarResultadoScanner(
 
 
 /* =====================================================
+   ANALIZAR CONTENIDO QR
+===================================================== */
+
+function analizarContenidoQR(
+  texto
+) {
+
+  const resultado = {
+
+    valor:
+      String(
+        texto || ""
+      ).trim(),
+
+    id:
+      "",
+
+    accion:
+      "",
+
+    token:
+      ""
+
+  };
+
+
+  if (!resultado.valor)
+    return resultado;
+
+
+  resultado.token =
+    resultado.valor
+      .toUpperCase()
+      .trim();
+
+
+  resultado.id =
+    resultado.valor;
+
+
+  try {
+
+    const url =
+      new URL(
+        resultado.valor
+      );
+
+
+    const idURL =
+      url.searchParams.get(
+        "id"
+      );
+
+
+    const accionURL =
+      url.searchParams.get(
+        "accion"
+      ) ||
+      url.searchParams.get(
+        "tipo"
+      );
+
+
+    if (idURL) {
+
+      resultado.id =
+        idURL;
+
+    }
+
+
+    if (accionURL) {
+
+      resultado.accion =
+        accionURL
+          .toLowerCase()
+          .trim();
+
+    }
+
+  } catch (e) {}
+
+
+  const token =
+    resultado.token;
+
+
+  if (!resultado.accion) {
+
+    if (
+      token ===
+      "SIRCA-ENTRADA"
+      ||
+      token.includes(
+        "SIRCA-ENTRADA"
+      )
+    ) {
+
+      resultado.accion =
+        "entrada";
+
+    } else if (
+      token ===
+      "SIRCA-SALIDA"
+      ||
+      token.includes(
+        "SIRCA-SALIDA"
+      )
+    ) {
+
+      resultado.accion =
+        "salida";
+
+    } else if (
+      token ===
+      "SIRCA-ASISTENCIA"
+      ||
+      token.includes(
+        "SIRCA-ASISTENCIA"
+      )
+    ) {
+
+      resultado.accion =
+        "asistencia";
+
+    }
+
+  }
+
+
+  resultado.id =
+    String(
+      resultado.id || ""
+    )
+    .trim()
+    .toUpperCase();
+
+
+  return resultado;
+
+}
+
+
+/* =====================================================
    PROCESAR QR
 ===================================================== */
 
-async function procesarQR(texto) {
+async function procesarQR(
+  texto
+) {
+
+  if (modoScanner === "usuario") {
+
+    await procesarQRUsuario(
+      texto
+    );
+
+    return;
+
+  }
+
+
+  await procesarQRAdministrador(
+    texto
+  );
+
+}
+
+
+/* =====================================================
+   PROCESAR QR ADMINISTRADOR
+===================================================== */
+
+async function procesarQRAdministrador(
+  texto
+) {
 
   if (procesandoQR)
     return;
@@ -5045,36 +5600,14 @@ async function procesarQR(texto) {
   }
 
 
-  let id =
-    texto;
+  const datosQR =
+    analizarContenidoQR(
+      texto
+    );
 
 
-  try {
-
-    const url =
-      new URL(texto);
-
-
-    const idURL =
-      url.searchParams.get(
-        "id"
-      );
-
-
-    if (idURL) {
-
-      id =
-        idURL;
-
-    }
-
-  } catch (e) {}
-
-
-  id =
-    id
-      .trim()
-      .toUpperCase();
+  const id =
+    datosQR.id;
 
 
   const usuario =
@@ -5208,6 +5741,404 @@ async function procesarQR(texto) {
   abrirRegistroQR(
     id
   );
+
+
+  procesandoQR =
+    false;
+
+}
+
+
+/* =====================================================
+   PROCESAR QR USUARIO
+===================================================== */
+
+async function procesarQRUsuario(
+  texto
+) {
+
+  if (procesandoQR)
+    return;
+
+
+  procesandoQR =
+    true;
+
+
+  try {
+
+    if (
+      !usuarioLogueado ||
+      !usuarioLogueado.id
+    ) {
+
+      establecerEstadoScanner(
+        "⚠ No fue posible identificar tu usuario",
+        "error"
+      );
+
+
+      mostrarMensaje(
+        "No fue posible identificar tu usuario.",
+        "error"
+      );
+
+
+      procesandoQR =
+        false;
+
+      return;
+
+    }
+
+
+    const usuario =
+      usuarioLogueado;
+
+
+    const datosQR =
+      analizarContenidoQR(
+        texto
+      );
+
+
+    const qrEsPropio =
+      datosQR.id ===
+      usuario.id;
+
+
+    const qrEsGeneral =
+      (
+        datosQR.accion ===
+          "entrada"
+        ||
+        datosQR.accion ===
+          "salida"
+        ||
+        datosQR.accion ===
+          "asistencia"
+      );
+
+
+    if (
+      !qrEsPropio &&
+      !qrEsGeneral
+    ) {
+
+      reproducirSonidoQR();
+
+      vibrarQR();
+
+
+      establecerEstadoScanner(
+        "⚠ QR no válido para tu cuenta",
+        "error"
+      );
+
+
+      const resultado =
+        document.getElementById(
+          "scannerResultado"
+        );
+
+
+      const avatar =
+        document.getElementById(
+          "scannerAvatar"
+        );
+
+
+      const nombre =
+        document.getElementById(
+          "scannerNombre"
+        );
+
+
+      const id =
+        document.getElementById(
+          "scannerID"
+        );
+
+
+      const accion =
+        document.getElementById(
+          "scannerAccion"
+        );
+
+
+      avatar.textContent =
+        "?";
+
+
+      nombre.textContent =
+        "QR no válido";
+
+
+      id.textContent =
+        "Este código no corresponde a tu usuario";
+
+
+      accion.className =
+        "scanner-action nuevo";
+
+
+      accion.textContent =
+        "⚠️ Escanea el QR de asistencia autorizado.";
+
+
+      resultado
+        .classList
+        .add("active");
+
+
+      await detenerScannerManteniendoModal();
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            1000
+          )
+      );
+
+
+      await cerrarScanner();
+
+
+      mostrarMensaje(
+        "El QR escaneado no corresponde a tu asistencia.",
+        "error"
+      );
+
+
+      procesandoQR =
+        false;
+
+
+      return;
+
+    }
+
+
+    let accion =
+      datosQR.accion;
+
+
+    if (
+      accion ===
+      "asistencia"
+      ||
+      !accion
+    ) {
+
+      accion =
+        usuario.dentro
+          ? "salida"
+          : "entrada";
+
+    }
+
+
+    if (
+      accion ===
+      "entrada" &&
+      usuario.dentro
+    ) {
+
+      establecerEstadoScanner(
+        "⚠ Ya tienes una entrada abierta",
+        "error"
+      );
+
+
+      mostrarResultadoScanner(
+        usuario,
+        "entrada"
+      );
+
+
+      document
+        .getElementById(
+          "scannerAccion"
+        )
+        .textContent =
+        "⚠️ Ya estás registrado como dentro.";
+
+
+      await detenerScannerManteniendoModal();
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            1000
+          )
+      );
+
+
+      await cerrarScanner();
+
+
+      mostrarMensaje(
+        "Ya tienes una entrada abierta.",
+        "error"
+      );
+
+
+      procesandoQR =
+        false;
+
+
+      return;
+
+    }
+
+
+    if (
+      accion ===
+      "salida" &&
+      !usuario.dentro
+    ) {
+
+      establecerEstadoScanner(
+        "⚠ No tienes una entrada abierta",
+        "error"
+      );
+
+
+      mostrarResultadoScanner(
+        usuario,
+        "salida"
+      );
+
+
+      document
+        .getElementById(
+          "scannerAccion"
+        )
+        .textContent =
+        "⚠️ No existe una entrada abierta para registrar la salida.";
+
+
+      await detenerScannerManteniendoModal();
+
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            1000
+          )
+      );
+
+
+      await cerrarScanner();
+
+
+      mostrarMensaje(
+        "No tienes una entrada abierta.",
+        "error"
+      );
+
+
+      procesandoQR =
+        false;
+
+
+      return;
+
+    }
+
+
+    reproducirSonidoQR();
+
+    vibrarQR();
+
+
+    establecerEstadoScanner(
+      "✓ QR detectado correctamente",
+      "success"
+    );
+
+
+    mostrarResultadoScanner(
+      usuario,
+      accion
+    );
+
+
+    await detenerScannerManteniendoModal();
+
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          650
+        )
+    );
+
+
+    if (
+      accion ===
+      "entrada"
+    ) {
+
+      await registrarEntradaUsuario(
+        usuario
+      );
+
+    } else {
+
+      await registrarSalidaUsuario(
+        usuario
+      );
+
+    }
+
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          500
+        )
+    );
+
+
+    await cerrarScanner();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error procesando QR de usuario:",
+      error
+    );
+
+
+    establecerEstadoScanner(
+      "⚠ Ocurrió un error",
+      "error"
+    );
+
+
+    mostrarMensaje(
+      "No fue posible registrar la asistencia: " +
+      error.message,
+      "error"
+    );
+
+
+    try {
+
+      await cerrarScanner();
+
+    } catch (e) {}
+
+  }
 
 
   procesandoQR =
@@ -5889,7 +6820,7 @@ window.registrarNuevoUsuario =
 
 
 /* =====================================================
-   ENTRADA
+   ENTRADA ADMINISTRADOR
 ===================================================== */
 
 async function registrarEntrada(
@@ -6094,7 +7025,7 @@ async function registrarEntrada(
 
 
 /* =====================================================
-   SALIDA
+   SALIDA ADMINISTRADOR
 ===================================================== */
 
 async function registrarSalida(
@@ -6315,6 +7246,486 @@ async function registrarSalida(
       error.message,
       "error"
     );
+
+  }
+
+}
+
+
+/* =====================================================
+   ENTRADA USUARIO
+===================================================== */
+
+async function registrarEntradaUsuario(
+  usuario
+) {
+
+  if (
+    esAdministrador
+  ) {
+
+    mostrarMensaje(
+      "Esta función corresponde al panel del usuario.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !usuarioLogueado ||
+    usuario.id !==
+      usuarioLogueado.id
+  ) {
+
+    throw new Error(
+      "El usuario no coincide con la sesión actual."
+    );
+
+  }
+
+
+  try {
+
+    const usuarioRef =
+      doc(
+        db,
+        "usuarios",
+        usuario.id
+      );
+
+
+    const asistenciaRef =
+      doc(
+        collection(
+          db,
+          "asistencias"
+        )
+      );
+
+
+    await runTransaction(
+      db,
+      async transaction => {
+
+        const usuarioSnap =
+          await transaction.get(
+            usuarioRef
+          );
+
+
+        if (
+          !usuarioSnap.exists()
+        ) {
+
+          throw new Error(
+            "Tu usuario no existe."
+          );
+
+        }
+
+
+        const datos =
+          usuarioSnap.data();
+
+
+        const solicitadas =
+          Number(
+            datos.horasSolicitadas ||
+            0
+          );
+
+
+        const acumuladas =
+          Number(
+            datos.horasAcumuladas ||
+            0
+          );
+
+
+        if (
+          solicitadas > 0 &&
+          acumuladas >=
+            solicitadas
+        ) {
+
+          throw new Error(
+            "Ya completaste las horas solicitadas."
+          );
+
+        }
+
+
+        if (datos.dentro) {
+
+          throw new Error(
+            "Ya tienes una entrada abierta."
+          );
+
+        }
+
+
+        const ahora =
+          new Date();
+
+
+        const entradaTimestamp =
+          Timestamp.fromDate(
+            ahora
+          );
+
+
+        transaction.set(
+          asistenciaRef,
+          {
+
+            usuarioId:
+              datos.id ||
+              usuario.id,
+
+            nombre:
+              datos.nombre ||
+              "",
+
+            correo:
+              datos.correo ||
+              "",
+
+            fecha:
+              ahora.toLocaleDateString(
+                "es-MX"
+              ),
+
+            entrada:
+              ahora.toLocaleTimeString(
+                "es-MX",
+                {
+                  hour:
+                    "2-digit",
+
+                  minute:
+                    "2-digit",
+
+                  second:
+                    "2-digit"
+                }
+              ),
+
+            salida:
+              "",
+
+            horas:
+              0,
+
+            entradaTimestamp,
+
+            salidaTimestamp:
+              null,
+
+            fechaHoraCreacion:
+              entradaTimestamp
+
+          }
+        );
+
+
+        transaction.update(
+          usuarioRef,
+          {
+
+            dentro:
+              true,
+
+            asistenciaAbiertaId:
+              asistenciaRef.id,
+
+            entradaTimestamp
+
+          }
+        );
+
+      }
+    );
+
+
+    mostrarMensaje(
+      "✅ Entrada registrada correctamente."
+    );
+
+
+    actualizarPerfilUsuario(
+      {
+        ...usuarioLogueado,
+        dentro: true
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error registrando entrada:",
+      error
+    );
+
+    mostrarMensaje(
+      error.message,
+      "error"
+    );
+
+    throw error;
+
+  }
+
+}
+
+
+/* =====================================================
+   SALIDA USUARIO
+===================================================== */
+
+async function registrarSalidaUsuario(
+  usuario
+) {
+
+  if (
+    esAdministrador
+  ) {
+
+    mostrarMensaje(
+      "Esta función corresponde al panel del usuario.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !usuarioLogueado ||
+    usuario.id !==
+      usuarioLogueado.id
+  ) {
+
+    throw new Error(
+      "El usuario no coincide con la sesión actual."
+    );
+
+  }
+
+
+  try {
+
+    const usuarioRef =
+      doc(
+        db,
+        "usuarios",
+        usuario.id
+      );
+
+
+    await runTransaction(
+      db,
+      async transaction => {
+
+        const usuarioSnap =
+          await transaction.get(
+            usuarioRef
+          );
+
+
+        if (
+          !usuarioSnap.exists()
+        ) {
+
+          throw new Error(
+            "Tu usuario no existe."
+          );
+
+        }
+
+
+        const datos =
+          usuarioSnap.data();
+
+
+        if (
+          !datos.dentro ||
+          !datos.asistenciaAbiertaId
+        ) {
+
+          throw new Error(
+            "No tienes una entrada abierta."
+          );
+
+        }
+
+
+        const asistenciaRef =
+          doc(
+            db,
+            "asistencias",
+            datos.asistenciaAbiertaId
+          );
+
+
+        const asistenciaSnap =
+          await transaction.get(
+            asistenciaRef
+          );
+
+
+        if (
+          !asistenciaSnap.exists()
+        ) {
+
+          throw new Error(
+            "No se encontró tu asistencia abierta."
+          );
+
+        }
+
+
+        const asistencia =
+          asistenciaSnap.data();
+
+
+        const entradaTimestamp =
+          asistencia.entradaTimestamp;
+
+
+        if (
+          !entradaTimestamp
+        ) {
+
+          throw new Error(
+            "La entrada no tiene una fecha válida."
+          );
+
+        }
+
+
+        const ahora =
+          new Date();
+
+
+        const salidaTimestamp =
+          Timestamp.fromDate(
+            ahora
+          );
+
+
+        const entradaDate =
+          entradaTimestamp.toDate();
+
+
+        const milisegundos =
+          ahora.getTime() -
+          entradaDate.getTime();
+
+
+        const horas =
+          Math.max(
+            0,
+            milisegundos /
+              3600000
+          );
+
+
+        const acumuladas =
+          Number(
+            datos.horasAcumuladas ||
+            0
+          );
+
+
+        transaction.update(
+          asistenciaRef,
+          {
+
+            salida:
+              ahora.toLocaleTimeString(
+                "es-MX",
+                {
+                  hour:
+                    "2-digit",
+
+                  minute:
+                    "2-digit",
+
+                  second:
+                    "2-digit"
+                }
+              ),
+
+            horas:
+              Number(
+                horas.toFixed(4)
+              ),
+
+            salidaTimestamp
+
+          }
+        );
+
+
+        transaction.update(
+          usuarioRef,
+          {
+
+            dentro:
+              false,
+
+            asistenciaAbiertaId:
+              null,
+
+            entradaTimestamp:
+              null,
+
+            horasAcumuladas:
+              Number(
+                (
+                  acumuladas +
+                  horas
+                ).toFixed(4)
+              )
+
+          }
+        );
+
+      }
+    );
+
+
+    mostrarMensaje(
+      "✅ Salida registrada correctamente."
+    );
+
+
+    actualizarPerfilUsuario(
+      {
+        ...usuarioLogueado,
+        dentro: false
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Error registrando salida:",
+      error
+    );
+
+    mostrarMensaje(
+      error.message,
+      "error"
+    );
+
+    throw error;
 
   }
 
@@ -7303,6 +8714,10 @@ function cargarPerfilUsuario() {
 }
 
 
+/* =====================================================
+   ACTUALIZAR PERFIL USUARIO
+===================================================== */
+
 function actualizarPerfilUsuario(
   usuario
 ) {
@@ -7380,6 +8795,12 @@ function actualizarPerfilUsuario(
     );
 
 
+  const estadoScanner =
+    document.getElementById(
+      "estadoScannerUsuario"
+    );
+
+
   if (usuario.dentro) {
 
     estado.textContent =
@@ -7388,6 +8809,17 @@ function actualizarPerfilUsuario(
     estado.className =
       "status status-dentro";
 
+
+    if (estadoScanner) {
+
+      estadoScanner.textContent =
+        "● Dentro";
+
+      estadoScanner.className =
+        "attendance-status dentro";
+
+    }
+
   } else {
 
     estado.textContent =
@@ -7395,6 +8827,17 @@ function actualizarPerfilUsuario(
 
     estado.className =
       "status status-fuera";
+
+
+    if (estadoScanner) {
+
+      estadoScanner.textContent =
+        "● Fuera";
+
+      estadoScanner.className =
+        "attendance-status fuera";
+
+    }
 
   }
 
