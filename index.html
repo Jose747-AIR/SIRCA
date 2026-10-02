@@ -2,626 +2,1167 @@
 <html lang="es">
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>SIRCA - Registro de Asistencia</title>
-
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
-<style>
-
-*{
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
-}
-
-body{
-  margin:0;
-  background:#f3f6f9;
-  color:#1f2933;
-}
-
-header{
-  background:linear-gradient(135deg,#0d3d63,#155b91);
-  color:white;
-  padding:22px 30px;
-  box-shadow:0 3px 10px rgba(0,0,0,.15);
-}
-
-.header-content{
-  max-width:1200px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:20px;
-}
-
-header h1{
-  margin:0;
-  font-size:30px;
-}
-
-header p{
-  margin:5px 0 0;
-  opacity:.9;
-}
-
-.firebase-status{
-  background:rgba(255,255,255,.15);
-  padding:9px 14px;
-  border-radius:20px;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-.container{
-  max-width:1200px;
-  margin:25px auto;
-  padding:0 15px;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:18px;
-  margin-bottom:20px;
-}
-
-.stat-card{
-  background:white;
-  border-radius:14px;
-  padding:20px;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.stat-card h3{
-  margin:0 0 8px;
-  color:#64748b;
-  font-size:14px;
-}
-
-.stat-card .number{
-  font-size:32px;
-  font-weight:bold;
-  color:#0d3d63;
-}
-
-.card{
-  background:white;
-  border-radius:14px;
-  padding:22px;
-  margin-bottom:20px;
-  box-shadow:0 3px 12px rgba(0,0,0,.07);
-}
-
-.card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.card-header h2{
-  margin:0;
-  color:#0d3d63;
-  font-size:21px;
-}
-
-button{
-  border:none;
-  border-radius:8px;
-  padding:10px 15px;
-  cursor:pointer;
-  font-weight:bold;
-  transition:.2s;
-}
-
-button:hover{
-  transform:translateY(-1px);
-  opacity:.92;
-}
-
-.btn-primary{
-  background:#155b91;
-  color:white;
-}
-
-.btn-success{
-  background:#198754;
-  color:white;
-}
-
-.btn-danger{
-  background:#dc3545;
-  color:white;
-}
-
-.btn-secondary{
-  background:#e2e8f0;
-  color:#334155;
-}
-
-.btn-warning{
-  background:#f59e0b;
-  color:white;
-}
-
-.control-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.user-info{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.info-box{
-  background:#f8fafc;
-  border-radius:10px;
-  padding:14px;
-  border:1px solid #e2e8f0;
-}
-
-.info-box small{
-  display:block;
-  color:#64748b;
-  margin-bottom:5px;
-}
-
-.info-box strong{
-  color:#0f172a;
-}
-
-.status{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:20px;
-  font-size:13px;
-  font-weight:bold;
-}
-
-.status-dentro{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.status-fuera{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.hours-summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-}
-
-.hours-box{
-  background:#f8fafc;
-  padding:18px;
-  border-radius:10px;
-  text-align:center;
-  border:1px solid #e2e8f0;
-}
-
-.hours-box h3{
-  margin:0 0 8px;
-  font-size:14px;
-  color:#64748b;
-}
-
-.hours-box strong{
-  font-size:25px;
-  color:#0d3d63;
-}
-
-.users-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-  gap:15px;
-}
-
-.user-card{
-  border:1px solid #e2e8f0;
-  border-radius:12px;
-  padding:16px;
-  background:white;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.user-card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
-
-.user-top{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:12px;
-}
-
-.user-color{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  flex-shrink:0;
-}
-
-.user-card h3{
-  margin:0;
-  font-size:16px;
-}
-
-.user-card p{
-  margin:3px 0;
-  font-size:13px;
-  color:#64748b;
-}
-
-.qr-mini{
-  display:flex;
-  justify-content:center;
-  margin:12px 0;
-}
-
-.user-actions{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.user-actions button{
-  font-size:12px;
-  padding:7px 9px;
-}
-
-.table-container{
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:700px;
-}
-
-th,td{
-  padding:11px;
-  border-bottom:1px solid #e2e8f0;
-  text-align:left;
-  font-size:13px;
-}
-
-th{
-  background:#f8fafc;
-  color:#475569;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  z-index:1000;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal.active{
-  display:flex;
-}
-
-.modal-content{
-  background:white;
-  width:100%;
-  max-width:550px;
-  max-height:90vh;
-  overflow-y:auto;
-  border-radius:15px;
-  padding:25px;
-  position:relative;
-}
-
-.modal-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.modal-header h2{
-  margin:0;
-  color:#0d3d63;
-}
-
-.close{
-  background:transparent;
-  font-size:25px;
-  color:#64748b;
-  padding:0 5px;
-}
-
-.form-group{
-  margin-bottom:15px;
-}
-
-.form-group label{
-  display:block;
-  font-size:13px;
-  font-weight:bold;
-  color:#475569;
-  margin-bottom:6px;
-}
-
-.form-group input,
-.form-group select{
-  width:100%;
-  padding:11px;
-  border:1px solid #cbd5e1;
-  border-radius:8px;
-  outline:none;
-}
-
-.form-group input:focus{
-  border-color:#155b91;
-}
-
-.form-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.modal-actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  margin-top:20px;
-}
-
-#reader{
-  width:100%;
-}
-
-.qr-registration{
-  text-align:center;
-  background:#f8fafc;
-  border-radius:10px;
-  padding:15px;
-  margin-bottom:20px;
-}
-
-.qr-registration strong{
-  font-size:20px;
-  color:#0d3d63;
-}
-
-.preview{
-  max-width:150px;
-  max-height:150px;
-  display:block;
-  margin:10px auto;
-  border-radius:8px;
-}
-
-.hidden{
-  display:none !important;
-}
-
-.search-box{
-  margin-bottom:15px;
-}
-
-.search-box input{
-  width:100%;
-  padding:12px;
-  border:1px solid #cbd5e1;
-  border-radius:8px;
-}
-
-.empty{
-  text-align:center;
-  color:#64748b;
-  padding:30px;
-}
-
-.message{
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-  font-size:14px;
-  display:none;
-}
-
-.message.success{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.message.error{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-
-/* ================================
-   LOGIN
-================================ */
-
-#loginScreen{
-  min-height:calc(100vh - 110px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:30px 15px;
-}
-
-.login-card{
-  width:100%;
-  max-width:430px;
-  background:white;
-  border-radius:18px;
-  padding:30px;
-  box-shadow:0 8px 30px rgba(0,0,0,.12);
-}
-
-.login-logo{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.login-logo h2{
-  margin:0;
-  color:#0d3d63;
-  font-size:34px;
-}
-
-.login-logo p{
-  color:#64748b;
-  margin-top:6px;
-}
-
-.login-type{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-bottom:20px;
-}
-
-.login-type button{
-  background:#e2e8f0;
-  color:#334155;
-}
-
-.login-type button.active{
-  background:#155b91;
-  color:white;
-}
-
-.login-title{
-  color:#0d3d63;
-  margin-bottom:18px;
-}
-
-.login-help{
-  font-size:12px;
-  color:#64748b;
-  text-align:center;
-  margin-top:15px;
-}
-
-.logout-area{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.role-badge{
-  background:rgba(255,255,255,.15);
-  padding:8px 12px;
-  border-radius:15px;
-  font-size:12px;
-}
-
-
-/* ================================
-   PERFIL USUARIO
-================================ */
-
-.user-profile-header{
-  text-align:center;
-  margin-bottom:20px;
-}
-
-.user-profile-header .avatar{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  margin:0 auto 12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:30px;
-  font-weight:bold;
-}
-
-.user-profile-header h2{
-  margin:0;
-  color:#0d3d63;
-}
-
-.user-profile-header p{
-  color:#64748b;
-  margin:5px 0;
-}
-
-.profile-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.profile-history table{
-  min-width:600px;
-}
-
-.btn-logout{
-  background:white;
-  color:#0d3d63;
-  padding:8px 12px;
-}
-
-
-/* ================================
-   RESPONSIVE
-================================ */
-
-@media(max-width:700px){
-
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .user-info,
-  .form-row,
-  .hours-summary,
-  .profile-grid{
-    grid-template-columns:1fr;
-  }
-
-  .header-content{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .logout-area{
-    width:100%;
-    justify-content:space-between;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>SIRCA - Registro de Asistencia</title>
+
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
+  </script>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f3f6f9;
+      color: #1f2933;
+    }
+
+    /* =====================================================
+       LOGIN
+    ===================================================== */
+
+    .login-screen {
+
+      position: fixed;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0d3d63,
+          #155b91
+        );
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      z-index: 99999;
+    }
+
+    .login-card {
+
+      width: 100%;
+      max-width: 420px;
+
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 35px;
+
+      box-shadow:
+        0 20px 50px rgba(0,0,0,.25);
+    }
+
+    .login-logo {
+
+      width: 80px;
+      height: 80px;
+
+      margin: 0 auto 20px;
+
+      border-radius: 18px;
+
+      background: #0d3d63;
+
+      color: white;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      font-size: 23px;
+
+      font-weight: bold;
+    }
+
+    .login-card h2 {
+
+      text-align: center;
+
+      margin: 0;
+
+      color: #0d3d63;
+    }
+
+    .login-subtitle {
+
+      text-align: center;
+
+      color: #64748b;
+
+      font-size: 13px;
+
+      margin:
+        8px
+        0
+        25px;
+    }
+
+    .login-button {
+
+      width: 100%;
+
+      padding: 13px;
+
+      font-size: 15px;
+    }
+
+    .login-message {
+
+      display: none;
+
+      padding: 10px;
+
+      border-radius: 8px;
+
+      margin-bottom: 15px;
+
+      font-size: 13px;
+    }
+
+    .login-message.error {
+
+      display: block;
+
+      background: #fee2e2;
+
+      color: #991b1b;
+    }
+
+    .login-message.success {
+
+      display: block;
+
+      background: #dcfce7;
+
+      color: #166534;
+    }
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+
+      background:
+        linear-gradient(
+          135deg,
+          #0d3d63,
+          #155b91
+        );
+
+      color: white;
+
+      padding: 22px 30px;
+
+      box-shadow:
+        0 3px 10px rgba(0,0,0,.15);
+    }
+
+    header .header-content {
+
+      max-width: 1200px;
+
+      margin: auto;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 20px;
+    }
+
+    header h1 {
+
+      margin: 0;
+
+      font-size: 30px;
+    }
+
+    header p {
+
+      margin:
+        5px
+        0
+        0;
+
+      opacity: .9;
+    }
+
+    .header-right {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      justify-content: flex-end;
+    }
+
+    .firebase-status {
+
+      background:
+        rgba(255,255,255,.15);
+
+      padding:
+        9px
+        14px;
+
+      border-radius: 20px;
+
+      font-size: 13px;
+
+      white-space: nowrap;
+    }
+
+    .user-role {
+
+      background:
+        rgba(255,255,255,.15);
+
+      padding:
+        9px
+        14px;
+
+      border-radius: 20px;
+
+      font-size: 13px;
+    }
+
+    .logout-button {
+
+      background: #dc3545;
+
+      color: white;
+
+      border: none;
+
+      border-radius: 8px;
+
+      padding:
+        9px
+        14px;
+
+      cursor: pointer;
+
+      font-weight: bold;
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .container {
+
+      max-width: 1200px;
+
+      margin:
+        25px
+        auto;
+
+      padding:
+        0
+        15px;
+    }
+
+    /* =====================================================
+       STATS
+    ===================================================== */
+
+    .stats {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          1fr
+        );
+
+      gap: 18px;
+
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+
+      background: white;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      box-shadow:
+        0 3px 12px rgba(0,0,0,.07);
+    }
+
+    .stat-card h3 {
+
+      margin:
+        0
+        0
+        8px;
+
+      color: #64748b;
+
+      font-size: 14px;
+    }
+
+    .stat-card .number {
+
+      font-size: 32px;
+
+      font-weight: bold;
+
+      color: #0d3d63;
+    }
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    .card {
+
+      background: white;
+
+      border-radius: 14px;
+
+      padding: 22px;
+
+      margin-bottom: 20px;
+
+      box-shadow:
+        0 3px 12px rgba(0,0,0,.07);
+    }
+
+    .card-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 10px;
+
+      margin-bottom: 18px;
+    }
+
+    .card-header h2 {
+
+      margin: 0;
+
+      color: #0d3d63;
+
+      font-size: 21px;
+    }
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    button {
+
+      border: none;
+
+      border-radius: 8px;
+
+      padding:
+        10px
+        15px;
+
+      cursor: pointer;
+
+      font-weight: bold;
+
+      transition: .2s;
+    }
+
+    button:hover {
+
+      transform:
+        translateY(-1px);
+
+      opacity: .92;
+    }
+
+    .btn-primary {
+
+      background: #155b91;
+
+      color: white;
+    }
+
+    .btn-success {
+
+      background: #198754;
+
+      color: white;
+    }
+
+    .btn-danger {
+
+      background: #dc3545;
+
+      color: white;
+    }
+
+    .btn-secondary {
+
+      background: #e2e8f0;
+
+      color: #334155;
+    }
+
+    .btn-warning {
+
+      background: #f59e0b;
+
+      color: white;
+    }
+
+    .control-buttons {
+
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+    /* =====================================================
+       USER INFO
+    ===================================================== */
+
+    .user-info {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 15px;
+    }
+
+    .info-box {
+
+      background: #f8fafc;
+
+      border-radius: 10px;
+
+      padding: 14px;
+
+      border:
+        1px
+        solid
+        #e2e8f0;
+    }
+
+    .info-box small {
+
+      display: block;
+
+      color: #64748b;
+
+      margin-bottom: 5px;
+    }
+
+    .info-box strong {
+
+      color: #0f172a;
+    }
+
+    /* =====================================================
+       STATUS
+    ===================================================== */
+
+    .status {
+
+      display: inline-block;
+
+      padding:
+        6px
+        12px;
+
+      border-radius: 20px;
+
+      font-size: 13px;
+
+      font-weight: bold;
+    }
+
+    .status-dentro {
+
+      background: #dcfce7;
+
+      color: #166534;
+    }
+
+    .status-fuera {
+
+      background: #fee2e2;
+
+      color: #991b1b;
+    }
+
+    /* =====================================================
+       HOURS
+    ===================================================== */
+
+    .hours-summary {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          3,
+          1fr
+        );
+
+      gap: 15px;
+    }
+
+    .hours-box {
+
+      background: #f8fafc;
+
+      padding: 18px;
+
+      border-radius: 10px;
+
+      text-align: center;
+
+      border:
+        1px
+        solid
+        #e2e8f0;
+    }
+
+    .hours-box h3 {
+
+      margin:
+        0
+        0
+        8px;
+
+      font-size: 14px;
+
+      color: #64748b;
+    }
+
+    .hours-box strong {
+
+      font-size: 25px;
+
+      color: #0d3d63;
+    }
+
+    /* =====================================================
+       USERS
+    ===================================================== */
+
+    .users-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fill,
+          minmax(
+            250px,
+            1fr
+          )
+        );
+
+      gap: 15px;
+    }
+
+    .user-card {
+
+      border:
+        1px
+        solid
+        #e2e8f0;
+
+      border-radius: 12px;
+
+      padding: 16px;
+
+      background: white;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    .user-card:hover {
+
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        0
+        5px
+        15px
+        rgba(0,0,0,.08);
+    }
+
+    .user-top {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 12px;
+
+      margin-bottom: 12px;
+    }
+
+    .user-color {
+
+      width: 42px;
+
+      height: 42px;
+
+      border-radius: 50%;
+
+      flex-shrink: 0;
+    }
+
+    .user-card h3 {
+
+      margin: 0;
+
+      font-size: 16px;
+    }
+
+    .user-card p {
+
+      margin:
+        3px
+        0;
+
+      font-size: 13px;
+
+      color: #64748b;
+    }
+
+    .qr-mini {
+
+      display: flex;
+
+      justify-content: center;
+
+      margin:
+        12px
+        0;
+    }
+
+    .user-actions {
+
+      display: flex;
+
+      gap: 7px;
+
+      flex-wrap: wrap;
+    }
+
+    .user-actions button {
+
+      font-size: 12px;
+
+      padding:
+        7px
+        9px;
+    }
+
+    /* =====================================================
+       TABLE
+    ===================================================== */
+
+    .table-container {
+
+      overflow-x: auto;
+    }
+
+    table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+      min-width: 700px;
+    }
+
+    th,
+    td {
+
+      padding: 11px;
+
+      border-bottom:
+        1px
+        solid
+        #e2e8f0;
+
+      text-align: left;
+
+      font-size: 13px;
+    }
+
+    th {
+
+      background: #f8fafc;
+
+      color: #475569;
+    }
+
+    /* =====================================================
+       MODALS
+    ===================================================== */
+
+    .modal {
+
+      display: none;
+
+      position: fixed;
+
+      z-index: 1000;
+
+      inset: 0;
+
+      background:
+        rgba(0,0,0,.55);
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+    .modal.active {
+
+      display: flex;
+    }
+
+    .modal-content {
+
+      background: white;
+
+      width: 100%;
+
+      max-width: 550px;
+
+      max-height: 90vh;
+
+      overflow-y: auto;
+
+      border-radius: 15px;
+
+      padding: 25px;
+
+      position: relative;
+    }
+
+    .modal-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+
+      margin: 0;
+
+      color: #0d3d63;
+    }
+
+    .close {
+
+      background: transparent;
+
+      font-size: 25px;
+
+      color: #64748b;
+
+      padding:
+        0
+        5px;
+    }
+
+    /* =====================================================
+       FORMS
+    ===================================================== */
+
+    .form-group {
+
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+
+      display: block;
+
+      font-size: 13px;
+
+      font-weight: bold;
+
+      color: #475569;
+
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+
+      width: 100%;
+
+      padding: 11px;
+
+      border:
+        1px
+        solid
+        #cbd5e1;
+
+      border-radius: 8px;
+
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+
+      border-color: #155b91;
+    }
+
+    .form-row {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 12px;
+    }
+
+    .modal-actions {
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      margin-top: 20px;
+    }
+
+    #reader {
+
+      width: 100%;
+    }
+
+    .qr-registration {
+
+      text-align: center;
+
+      background: #f8fafc;
+
+      border-radius: 10px;
+
+      padding: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .qr-registration strong {
+
+      font-size: 20px;
+
+      color: #0d3d63;
+    }
+
+    .preview {
+
+      max-width: 150px;
+
+      max-height: 150px;
+
+      display: block;
+
+      margin:
+        10px
+        auto;
+
+      border-radius: 8px;
+    }
+
+    .hidden {
+
+      display: none !important;
+    }
+
+    .search-box {
+
+      margin-bottom: 15px;
+    }
+
+    .search-box input {
+
+      width: 100%;
+
+      padding: 12px;
+
+      border:
+        1px
+        solid
+        #cbd5e1;
+
+      border-radius: 8px;
+    }
+
+    .empty {
+
+      text-align: center;
+
+      color: #64748b;
+
+      padding: 30px;
+    }
+
+    .message {
+
+      padding: 12px;
+
+      border-radius: 8px;
+
+      margin-bottom: 15px;
+
+      font-size: 14px;
+
+      display: none;
+    }
+
+    .message.success {
+
+      background: #dcfce7;
+
+      color: #166534;
+    }
+
+    .message.error {
+
+      background: #fee2e2;
+
+      color: #991b1b;
+    }
+
+    /* =====================================================
+       PERFIL USUARIO
+    ===================================================== */
+
+    .perfil-header {
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 15px;
+
+      margin-bottom: 20px;
+    }
+
+    .perfil-avatar {
+
+      width: 65px;
+
+      height: 65px;
+
+      border-radius: 50%;
+
+      background: #155b91;
+
+      color: white;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 24px;
+
+      font-weight: bold;
+    }
+
+    .perfil-header h2 {
+
+      margin: 0;
+
+      color: #0d3d63;
+    }
+
+    .perfil-header p {
+
+      margin:
+        4px
+        0
+        0;
+
+      color: #64748b;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+      .stats {
+
+        grid-template-columns: 1fr;
+      }
+
+      .user-info,
+      .form-row,
+      .hours-summary {
+
+        grid-template-columns: 1fr;
+      }
+
+      header .header-content {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
+      .header-right {
+
+        justify-content: flex-start;
+      }
+
+      .login-card {
+
+        padding: 25px;
+      }
+
+    }
+
+  </style>
 
 </head>
+
 
 <body>
 
 
 <!-- =====================================================
-     HEADER
+     LOGIN
 ===================================================== -->
+
+<div id="pantallaLogin" class="login-screen">
+
+  <div class="login-card">
+
+    <div class="login-logo">
+      SIRCA
+    </div>
+
+    <h2>Acceso al sistema</h2>
+
+    <p class="login-subtitle">
+      Sistema de Registro y Control de Asistencia
+    </p>
+
+    <div
+      id="loginMensaje"
+      class="login-message">
+    </div>
+
+    <div class="form-group">
+
+      <label>
+        Correo electrónico
+      </label>
+
+      <input
+        type="email"
+        id="loginCorreo"
+        placeholder="correo@ejemplo.com"
+        autocomplete="username"
+      >
+
+    </div>
+
+    <div class="form-group">
+
+      <label>
+        Contraseña
+      </label>
+
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Contraseña"
+        autocomplete="current-password"
+      >
+
+    </div>
+
+    <button
+      class="btn-primary login-button"
+      onclick="iniciarSesion()">
+
+      Iniciar sesión
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     APLICACIÓN
+===================================================== -->
+
+<div id="appPrincipal" class="hidden">
+
 
 <header>
 
@@ -637,26 +1178,30 @@ th{
 
     </div>
 
-    <div class="logout-area">
-
-      <span
-        id="roleBadge"
-        class="role-badge hidden"
-      ></span>
+    <div class="header-right">
 
       <div
         class="firebase-status"
-        id="firebaseStatus"
-      >
+        id="firebaseStatus">
+
         ● Conectando...
+
+      </div>
+
+      <div
+        class="user-role"
+        id="userRole">
+
+        -
+
       </div>
 
       <button
-        id="btnCerrarSesion"
-        class="btn-logout hidden"
-        onclick="cerrarSesion()"
-      >
+        class="logout-button"
+        onclick="cerrarSesion()">
+
         Cerrar sesión
+
       </button>
 
     </div>
@@ -666,242 +1211,113 @@ th{
 </header>
 
 
+<div class="container">
 
-<!-- =====================================================
-     LOGIN
-===================================================== -->
 
-<div id="loginScreen">
-
-  <div class="login-card">
-
-    <div class="login-logo">
-
-      <h2>SIRCA</h2>
-
-      <p>
-        Acceso al sistema
-      </p>
-
-    </div>
-
-
-    <div class="login-type">
-
-      <button
-        id="btnLoginUsuario"
-        class="active"
-        onclick="cambiarTipoLogin('usuario')"
-      >
-        👤 Usuario
-      </button>
-
-      <button
-        id="btnLoginAdmin"
-        onclick="cambiarTipoLogin('admin')"
-      >
-        👨‍💼 Administrador
-      </button>
-
-    </div>
-
-
-    <div id="loginMensaje" class="message"></div>
-
-
-    <!-- USUARIO -->
-
-    <div id="formLoginUsuario">
-
-      <h3 class="login-title">
-        Acceso de usuario
-      </h3>
-
-      <div class="form-group">
-
-        <label>
-          ID SIRCA
-        </label>
-
-        <input
-          type="text"
-          id="loginSirca"
-          placeholder="SIRCA-001"
-          autocomplete="username"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          PIN
-        </label>
-
-        <input
-          type="password"
-          id="loginPin"
-          placeholder="PIN"
-          maxlength="20"
-          autocomplete="current-password"
-        >
-
-      </div>
-
-
-      <button
-        class="btn-primary"
-        style="width:100%"
-        onclick="loginUsuario()"
-      >
-        Ingresar
-      </button>
-
-
-      <div class="login-help">
-        Ingresa con tu ID SIRCA y PIN.
-      </div>
-
-    </div>
-
-
-
-    <!-- ADMINISTRADOR -->
-
-    <div
-      id="formLoginAdmin"
-      class="hidden"
-    >
-
-      <h3 class="login-title">
-        Acceso administrativo
-      </h3>
-
-
-      <div class="form-group">
-
-        <label>
-          Correo electrónico
-        </label>
-
-        <input
-          type="email"
-          id="loginAdminCorreo"
-          placeholder="administrador@correo.com"
-          autocomplete="username"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Contraseña
-        </label>
-
-        <input
-          type="password"
-          id="loginAdminPassword"
-          placeholder="Contraseña"
-          autocomplete="current-password"
-        >
-
-      </div>
-
-
-      <button
-        class="btn-primary"
-        style="width:100%"
-        onclick="loginAdministrador()"
-      >
-        Ingresar como administrador
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     PANEL ADMINISTRADOR
-===================================================== -->
-
-<div
-  id="adminPanel"
-  class="container hidden"
->
-
-  <div id="mensaje" class="message"></div>
-
-
-  <!-- ESTADÍSTICAS -->
-
-  <div class="stats">
-
-    <div class="stat-card">
-
-      <h3>
-        Usuarios registrados
-      </h3>
-
-      <div
-        class="number"
-        id="totalUsuarios"
-      >
-        0
-      </div>
-
-    </div>
-
-
-    <div class="stat-card">
-
-      <h3>
-        Usuarios dentro
-      </h3>
-
-      <div
-        class="number"
-        id="usuariosDentro"
-      >
-        0
-      </div>
-
-    </div>
-
+  <div
+    id="mensaje"
+    class="message">
   </div>
 
 
+  <!-- ===================================================
+       PANEL ADMINISTRADOR
+  =================================================== -->
 
-  <!-- CONTROL -->
+  <div id="panelAdministrador" class="hidden">
 
-  <div class="card">
 
-    <div class="card-header">
+    <!-- ESTADÍSTICAS -->
 
-      <h2>
-        Control de asistencia
-      </h2>
+    <div class="stats">
+
+      <div class="stat-card">
+
+        <h3>
+          Usuarios registrados
+        </h3>
+
+        <div
+          class="number"
+          id="totalUsuarios">
+
+          0
+
+        </div>
+
+      </div>
+
+
+      <div class="stat-card">
+
+        <h3>
+          Usuarios dentro
+        </h3>
+
+        <div
+          class="number"
+          id="usuariosDentro">
+
+          0
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CONTROL DE ASISTENCIA -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <h2>
+          Control de asistencia
+        </h2>
+
+        <div class="control-buttons">
+
+          <button
+            class="btn-primary"
+            onclick="abrirScanner()">
+
+            📷 Escanear QR
+
+          </button>
+
+
+          <button
+            class="btn-success"
+            onclick="nuevoUsuarioManual()">
+
+            + Nuevo
+
+          </button>
+
+        </div>
+
+      </div>
+
 
       <div class="control-buttons">
 
         <button
-          class="btn-primary"
-          onclick="abrirScanner()"
-        >
-          📷 Escanear QR
+          class="btn-success"
+          onclick="registrarEntradaManual()">
+
+          Registrar entrada
+
         </button>
 
+
         <button
-          class="btn-success"
-          onclick="nuevoUsuarioManual()"
-        >
-          + Nuevo
+          class="btn-danger"
+          onclick="registrarSalidaManual()">
+
+          Registrar salida
+
         </button>
 
       </div>
@@ -909,535 +1325,625 @@ th{
     </div>
 
 
-    <div class="control-buttons">
+    <!-- USUARIO SELECCIONADO -->
 
-      <button
-        class="btn-success"
-        onclick="registrarEntradaManual()"
-      >
-        Registrar entrada
-      </button>
+    <div class="card">
 
-      <button
-        class="btn-danger"
-        onclick="registrarSalidaManual()"
-      >
-        Registrar salida
-      </button>
+      <div class="card-header">
+
+        <h2>
+          Usuario seleccionado
+        </h2>
+
+      </div>
+
+
+      <div
+        id="sinUsuario"
+        class="empty">
+
+        Selecciona un usuario para visualizar
+        su información.
+
+      </div>
+
+
+      <div
+        id="usuarioSeleccionado"
+        class="hidden">
+
+
+        <div class="user-info">
+
+
+          <div class="info-box">
+
+            <small>
+              Nombre completo
+            </small>
+
+            <strong id="infoNombre">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Escuela / Universidad
+            </small>
+
+            <strong id="infoEscuela">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Área
+            </small>
+
+            <strong id="infoArea">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Matrícula
+            </small>
+
+            <strong id="infoTIA">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Correo
+            </small>
+
+            <strong id="infoCorreo">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              ID QR
+            </small>
+
+            <strong id="infoID">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Estado
+            </small>
+
+            <span
+              id="infoEstado"
+              class="status status-fuera">
+
+              ● Fuera
+
+            </span>
+
+          </div>
+
+
+        </div>
+
+
+        <div
+          class="control-buttons"
+          style="margin-top:18px">
+
+          <button
+            class="btn-primary"
+            onclick="guardarUsuario()">
+
+            Guardar cambios
+
+          </button>
+
+
+          <button
+            class="btn-secondary"
+            onclick="verHistorialUsuario()">
+
+            Ver historial
+
+          </button>
+
+        </div>
+
+
+      </div>
 
     </div>
+
+
+    <!-- HORAS -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <h2>
+          Resumen de horas
+        </h2>
+
+      </div>
+
+
+      <div class="hours-summary">
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas solicitadas
+          </h3>
+
+          <strong id="horasSolicitadas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas acumuladas
+          </h3>
+
+          <strong id="horasAcumuladas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas faltantes
+          </h3>
+
+          <strong id="horasFaltantes">
+            0
+          </strong>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- USUARIOS -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <h2>
+          Usuarios registrados
+        </h2>
+
+      </div>
+
+
+      <div class="search-box">
+
+        <input
+          type="text"
+          id="buscarUsuario"
+          placeholder="Buscar por nombre, escuela, área o ID..."
+          oninput="mostrarUsuarios()"
+        >
+
+      </div>
+
+
+      <div
+        id="usuariosGrid"
+        class="users-grid">
+      </div>
+
+    </div>
+
+
+    <!-- HISTORIAL -->
+
+    <div
+      class="card"
+      id="historialCard">
+
+      <div class="card-header">
+
+        <h2>
+          Historial de asistencia
+        </h2>
+
+
+        <div class="control-buttons">
+
+          <button
+            class="btn-primary"
+            onclick="exportarCSV()">
+
+            Exportar CSV
+
+          </button>
+
+
+          <button
+            class="btn-danger"
+            onclick="limpiarHistorial()">
+
+            Limpiar historial
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="search-box">
+
+        <input
+          type="text"
+          id="buscarHistorial"
+          placeholder="Buscar en historial..."
+          oninput="mostrarHistorial()"
+        >
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Nombre
+              </th>
+
+              <th>
+                Fecha
+              </th>
+
+              <th>
+                Entrada
+              </th>
+
+              <th>
+                Salida
+              </th>
+
+              <th>
+                Horas
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="tablaHistorial">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
 
   </div>
 
 
+  <!-- ===================================================
+       PANEL USUARIO
+  =================================================== -->
 
-  <!-- USUARIO SELECCIONADO -->
-
-  <div class="card">
-
-    <div class="card-header">
-
-      <h2>
-        Usuario seleccionado
-      </h2>
-
-    </div>
+  <div
+    id="panelUsuario"
+    class="hidden">
 
 
-    <div
-      id="sinUsuario"
-      class="empty"
-    >
-      Selecciona un usuario para visualizar su información.
-    </div>
+    <!-- PERFIL -->
+
+    <div class="card">
+
+      <div class="perfil-header">
+
+        <div
+          class="perfil-avatar"
+          id="perfilAvatar">
+
+          U
+
+        </div>
 
 
-    <div
-      id="usuarioSeleccionado"
-      class="hidden"
-    >
+        <div>
+
+          <h2 id="perfilNombre">
+            Usuario
+          </h2>
+
+          <p id="perfilID">
+            SIRCA-000
+          </p>
+
+        </div>
+
+      </div>
+
 
       <div class="user-info">
 
-        <div class="info-box">
-          <small>Nombre completo</small>
-          <strong id="infoNombre">-</strong>
-        </div>
-
-        <div class="info-box">
-          <small>Escuela / Universidad</small>
-          <strong id="infoEscuela">-</strong>
-        </div>
-
-        <div class="info-box">
-          <small>Área</small>
-          <strong id="infoArea">-</strong>
-        </div>
-
-        <div class="info-box">
-          <small>Matrícula</small>
-          <strong id="infoTIA">-</strong>
-        </div>
-
-        <div class="info-box">
-          <small>Correo</small>
-          <strong id="infoCorreo">-</strong>
-        </div>
-
-        <div class="info-box">
-          <small>ID QR</small>
-          <strong id="infoID">-</strong>
-        </div>
 
         <div class="info-box">
 
           <small>
-            Estado
+            Nombre completo
+          </small>
+
+          <strong id="perfilNombreCompleto">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            Escuela / Universidad
+          </small>
+
+          <strong id="perfilEscuela">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            Área
+          </small>
+
+          <strong id="perfilArea">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            Matrícula
+          </small>
+
+          <strong id="perfilTIA">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            Correo
+          </small>
+
+          <strong id="perfilCorreo">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            ID QR
+          </small>
+
+          <strong id="perfilIDQR">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="info-box">
+
+          <small>
+            Estado actual
           </small>
 
           <span
-            id="infoEstado"
-            class="status status-fuera"
-          >
+            id="perfilEstado"
+            class="status status-fuera">
+
             ● Fuera
+
           </span>
 
         </div>
 
-      </div>
 
+        <div class="info-box">
 
-      <div
-        class="control-buttons"
-        style="margin-top:18px"
-      >
+          <small>
+            Periodo
+          </small>
 
-        <button
-          class="btn-primary"
-          onclick="guardarUsuario()"
-        >
-          Guardar cambios
-        </button>
+          <strong id="perfilPeriodo">
+            -
+          </strong>
 
-        <button
-          class="btn-secondary"
-          onclick="verHistorialUsuario()"
-        >
-          Ver historial
-        </button>
+        </div>
+
 
       </div>
 
     </div>
+
+
+    <!-- HORAS DEL USUARIO -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <h2>
+          Mis horas
+        </h2>
+
+      </div>
+
+
+      <div class="hours-summary">
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas solicitadas
+          </h3>
+
+          <strong id="misHorasSolicitadas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas acumuladas
+          </h3>
+
+          <strong id="misHorasAcumuladas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas faltantes
+          </h3>
+
+          <strong id="misHorasFaltantes">
+            0
+          </strong>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <!-- MI HISTORIAL -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <h2>
+          Mi historial de asistencia
+        </h2>
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Fecha
+              </th>
+
+              <th>
+                Entrada
+              </th>
+
+              <th>
+                Salida
+              </th>
+
+              <th>
+                Horas
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="miTablaHistorial">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
 
   </div>
 
-
-
-  <!-- HORAS -->
-
-  <div class="card">
-
-    <div class="card-header">
-
-      <h2>
-        Resumen de horas
-      </h2>
-
-    </div>
-
-
-    <div class="hours-summary">
-
-      <div class="hours-box">
-
-        <h3>
-          Horas solicitadas
-        </h3>
-
-        <strong id="horasSolicitadas">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="hours-box">
-
-        <h3>
-          Horas acumuladas
-        </h3>
-
-        <strong id="horasAcumuladas">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="hours-box">
-
-        <h3>
-          Horas faltantes
-        </h3>
-
-        <strong id="horasFaltantes">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- USUARIOS -->
-
-  <div class="card">
-
-    <div class="card-header">
-
-      <h2>
-        Usuarios registrados
-      </h2>
-
-    </div>
-
-
-    <div class="search-box">
-
-      <input
-        type="text"
-        id="buscarUsuario"
-        placeholder="Buscar por nombre, escuela, área o ID..."
-        oninput="mostrarUsuarios()"
-      >
-
-    </div>
-
-
-    <div
-      id="usuariosGrid"
-      class="users-grid"
-    ></div>
-
-  </div>
-
-
-
-  <!-- HISTORIAL -->
-
-  <div
-    class="card"
-    id="historialCard"
-  >
-
-    <div class="card-header">
-
-      <h2>
-        Historial de asistencia
-      </h2>
-
-      <div class="control-buttons">
-
-        <button
-          class="btn-primary"
-          onclick="exportarCSV()"
-        >
-          Exportar CSV
-        </button>
-
-        <button
-          class="btn-danger"
-          onclick="limpiarHistorial()"
-        >
-          Limpiar historial
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="search-box">
-
-      <input
-        type="text"
-        id="buscarHistorial"
-        placeholder="Buscar en historial..."
-        oninput="mostrarHistorial()"
-      >
-
-    </div>
-
-
-    <div class="table-container">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Nombre</th>
-            <th>Fecha</th>
-            <th>Entrada</th>
-            <th>Salida</th>
-            <th>Horas</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody id="tablaHistorial"></tbody>
-
-      </table>
-
-    </div>
-
-  </div>
 
 </div>
 
-
-
-<!-- =====================================================
-     PANEL USUARIO
-===================================================== -->
-
-<div
-  id="userPanel"
-  class="container hidden"
->
-
-  <div id="mensajeUsuario" class="message"></div>
-
-
-  <div class="card">
-
-    <div class="user-profile-header">
-
-      <div
-        id="perfilAvatar"
-        class="avatar"
-        style="background:#155b91"
-      >
-        S
-      </div>
-
-      <h2 id="perfilNombre">
-        Usuario
-      </h2>
-
-      <p id="perfilID">
-        SIRCA-000
-      </p>
-
-    </div>
-
-
-    <div class="profile-grid">
-
-      <div class="info-box">
-
-        <small>
-          Escuela / Universidad
-        </small>
-
-        <strong id="perfilEscuela">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Área
-        </small>
-
-        <strong id="perfilArea">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Matrícula
-        </small>
-
-        <strong id="perfilTIA">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Correo
-        </small>
-
-        <strong id="perfilCorreo">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Fecha de ingreso
-        </small>
-
-        <strong id="perfilFechaIngreso">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Fecha de egreso
-        </small>
-
-        <strong id="perfilFechaEgreso">
-          -
-        </strong>
-
-      </div>
-
-
-      <div class="info-box">
-
-        <small>
-          Estado actual
-        </small>
-
-        <span
-          id="perfilEstado"
-          class="status status-fuera"
-        >
-          ● Fuera
-        </span>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- HORAS USUARIO -->
-
-  <div class="card">
-
-    <div class="card-header">
-
-      <h2>
-        Mis horas
-      </h2>
-
-    </div>
-
-
-    <div class="hours-summary">
-
-      <div class="hours-box">
-
-        <h3>
-          Solicitadas
-        </h3>
-
-        <strong id="perfilHorasSolicitadas">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="hours-box">
-
-        <h3>
-          Acumuladas
-        </h3>
-
-        <strong id="perfilHorasAcumuladas">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="hours-box">
-
-        <h3>
-          Faltantes
-        </h3>
-
-        <strong id="perfilHorasFaltantes">
-          0
-        </strong>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- HISTORIAL USUARIO -->
-
-  <div class="card profile-history">
-
-    <div class="card-header">
-
-      <h2>
-        Mi historial de asistencia
-      </h2>
-
-    </div>
-
-
-    <div class="table-container">
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Fecha</th>
-            <th>Entrada</th>
-            <th>Salida</th>
-            <th>Horas</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody id="tablaHistorialUsuario"></tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
 </div>
-
 
 
 <!-- =====================================================
@@ -1446,10 +1952,10 @@ th{
 
 <div
   class="modal"
-  id="modalScanner"
->
+  id="modalScanner">
 
   <div class="modal-content">
+
 
     <div class="modal-header">
 
@@ -1457,21 +1963,24 @@ th{
         Escanear código QR
       </h2>
 
+
       <button
         class="close"
-        onclick="cerrarScanner()"
-      >
+        onclick="cerrarScanner()">
+
         ×
+
       </button>
 
     </div>
 
+
     <div id="reader"></div>
+
 
   </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -1480,10 +1989,10 @@ th{
 
 <div
   class="modal"
-  id="modalRegistro"
->
+  id="modalRegistro">
 
   <div class="modal-content">
+
 
     <div class="modal-header">
 
@@ -1491,11 +2000,13 @@ th{
         Registrar usuario
       </h2>
 
+
       <button
         class="close"
-        onclick="cerrarModalRegistro()"
-      >
+        onclick="cerrarModalRegistro()">
+
         ×
+
       </button>
 
     </div>
@@ -1591,6 +2102,7 @@ th{
 
     <div class="form-row">
 
+
       <div class="form-group">
 
         <label>
@@ -1617,6 +2129,7 @@ th{
         >
 
       </div>
+
 
     </div>
 
@@ -1650,6 +2163,7 @@ th{
         accept="image/*"
       >
 
+
       <img
         id="previewCredencial"
         class="preview hidden"
@@ -1662,24 +2176,27 @@ th{
 
       <button
         class="btn-secondary"
-        onclick="cerrarModalRegistro()"
-      >
+        onclick="cerrarModalRegistro()">
+
         Cancelar
+
       </button>
+
 
       <button
         class="btn-success"
-        onclick="registrarNuevoUsuario()"
-      >
+        onclick="registrarNuevoUsuario()">
+
         Registrar
+
       </button>
 
     </div>
 
+
   </div>
 
 </div>
-
 
 
 <!-- =====================================================
@@ -1687,6 +2204,11 @@ th{
 ===================================================== -->
 
 <script type="module">
+
+
+/* =====================================================
+   FIREBASE
+===================================================== */
 
 import {
   initializeApp
@@ -1724,11 +2246,6 @@ from
 "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 
-
-/* =====================================================
-   FIREBASE
-===================================================== */
-
 const firebaseConfig = {
 
   apiKey:
@@ -1758,12 +2275,13 @@ const firebaseConfig = {
 const app =
   initializeApp(firebaseConfig);
 
+
 const auth =
   getAuth(app);
 
+
 const db =
   getFirestore(app);
-
 
 
 /* =====================================================
@@ -1774,9 +2292,13 @@ let usuarios = [];
 
 let asistencias = [];
 
+let asistenciasUsuario = [];
+
 let usuarioActual = null;
 
-let usuarioPerfil = null;
+let usuarioLogueado = null;
+
+let esAdministrador = false;
 
 let firebaseListo = false;
 
@@ -1786,16 +2308,13 @@ let scannerActivo = false;
 
 let idQRpendiente = null;
 
-let unsubUsuarios = null;
+let unsubscribeUsuarios = null;
 
-let unsubAsistencias = null;
+let unsubscribeAsistencias = null;
 
-let unsubUsuarioPerfil = null;
+let unsubscribeUsuario = null;
 
-let unsubAsistenciasUsuario = null;
-
-let tipoLogin = "usuario";
-
+let unsubscribeHistorialUsuario = null;
 
 
 /* =====================================================
@@ -1828,33 +2347,48 @@ const colores = [
 ];
 
 
-
 /* =====================================================
    UTILIDADES
 ===================================================== */
 
-function escapeHTML(text){
+function mostrarMensaje(
+  texto,
+  tipo = "success"
+) {
 
-  const div =
-    document.createElement("div");
+  const mensaje =
+    document.getElementById("mensaje");
 
-  div.textContent =
-    text ?? "";
+  mensaje.textContent =
+    texto;
 
-  return div.innerHTML;
+  mensaje.className =
+    "message " + tipo;
+
+  mensaje.style.display =
+    "block";
+
+
+  setTimeout(() => {
+
+    mensaje.style.display =
+      "none";
+
+  }, 4000);
 
 }
 
 
-function formatoHoras(horas){
+function formatoHoras(horas) {
 
-  return Number(horas || 0)
-    .toFixed(2);
+  return Number(
+    horas || 0
+  ).toFixed(2);
 
 }
 
 
-function obtenerColor(index){
+function obtenerColor(index) {
 
   return colores[
     index % colores.length
@@ -1863,69 +2397,24 @@ function obtenerColor(index){
 }
 
 
-function mostrarMensaje(texto,tipo="success"){
+function generarID() {
 
-  const mensaje =
-    document.getElementById("mensaje");
-
-  if(!mensaje) return;
-
-  mensaje.textContent =
-    texto;
-
-  mensaje.className =
-    "message " + tipo;
-
-  mensaje.style.display =
-    "block";
-
-  setTimeout(()=>{
-
-    mensaje.style.display =
-      "none";
-
-  },4000);
-
-}
-
-
-function mostrarMensajeUsuario(texto,tipo="success"){
-
-  const mensaje =
-    document.getElementById("mensajeUsuario");
-
-  mensaje.textContent =
-    texto;
-
-  mensaje.className =
-    "message " + tipo;
-
-  mensaje.style.display =
-    "block";
-
-  setTimeout(()=>{
-
-    mensaje.style.display =
-      "none";
-
-  },4000);
-
-}
-
-
-function generarID(){
-
-  for(let i=1;i<=20;i++){
+  for (
+    let i = 1;
+    i <= 20;
+    i++
+  ) {
 
     const id =
       "SIRCA-" +
-      String(i).padStart(3,"0");
+      String(i).padStart(3, "0");
 
-    if(
+
+    if (
       !usuarios.some(
         u => u.id === id
       )
-    ){
+    ) {
 
       return id;
 
@@ -1938,206 +2427,57 @@ function generarID(){
 }
 
 
+function escapeHTML(text) {
 
-/*
-  Convierte:
+  const div =
+    document.createElement("div");
 
-  SIRCA-001
+  div.textContent =
+    text ?? "";
 
-  en:
-
-  sirca-001@sirca-a30b2.firebaseapp.com
-
-  Esta dirección es interna.
-  El usuario nunca necesita conocerla.
-*/
-
-function emailInternoSirca(id){
-
-  return (
-    String(id)
-      .trim()
-      .toLowerCase()
-    +
-    "@sirca-a30b2.firebaseapp.com"
-  );
+  return div.innerHTML;
 
 }
-
 
 
 /* =====================================================
    LOGIN
 ===================================================== */
 
-function cambiarTipoLogin(tipo){
-
-  tipoLogin =
-    tipo;
-
-
-  const usuario =
-    document.getElementById(
-      "formLoginUsuario"
-    );
-
-  const admin =
-    document.getElementById(
-      "formLoginAdmin"
-    );
-
-
-  const btnUsuario =
-    document.getElementById(
-      "btnLoginUsuario"
-    );
-
-  const btnAdmin =
-    document.getElementById(
-      "btnLoginAdmin"
-    );
-
-
-  if(tipo === "usuario"){
-
-    usuario.classList.remove(
-      "hidden"
-    );
-
-    admin.classList.add(
-      "hidden"
-    );
-
-    btnUsuario.classList.add(
-      "active"
-    );
-
-    btnAdmin.classList.remove(
-      "active"
-    );
-
-  }else{
-
-    usuario.classList.add(
-      "hidden"
-    );
-
-    admin.classList.remove(
-      "hidden"
-    );
-
-    btnUsuario.classList.remove(
-      "active"
-    );
-
-    btnAdmin.classList.add(
-      "active"
-    );
-
-  }
-
-}
-
-
-
-async function loginUsuario(){
-
-  const id =
-    document
-      .getElementById("loginSirca")
-      .value
-      .trim()
-      .toUpperCase();
-
-
-  const pin =
-    document
-      .getElementById("loginPin")
-      .value
-      .trim();
-
-
-  if(!id || !pin){
-
-    mostrarLoginError(
-      "Captura tu ID SIRCA y PIN."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !/^SIRCA-\d{3}$/.test(id)
-  ){
-
-    mostrarLoginError(
-      "El ID debe tener el formato SIRCA-001."
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    mostrarLoginError(
-      "Iniciando sesión...",
-      false
-    );
-
-
-    await signInWithEmailAndPassword(
-
-      auth,
-
-      emailInternoSirca(id),
-
-      pin
-
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    mostrarLoginError(
-      traducirErrorFirebase(error),
-      true
-    );
-
-  }
-
-}
-
-
-
-async function loginAdministrador(){
+async function iniciarSesion() {
 
   const correo =
     document
-      .getElementById(
-        "loginAdminCorreo"
-      )
+      .getElementById("loginCorreo")
       .value
       .trim();
 
 
   const password =
     document
-      .getElementById(
-        "loginAdminPassword"
-      )
+      .getElementById("loginPassword")
       .value;
 
 
-  if(!correo || !password){
+  const mensaje =
+    document
+      .getElementById("loginMensaje");
 
-    mostrarLoginError(
-      "Captura tu correo y contraseña."
+
+  mensaje.className =
+    "login-message";
+
+  mensaje.textContent =
+    "";
+
+
+  if (!correo || !password) {
+
+    mensaje.textContent =
+      "Captura tu correo y contraseña.";
+
+    mensaje.classList.add(
+      "error"
     );
 
     return;
@@ -2145,32 +2485,49 @@ async function loginAdministrador(){
   }
 
 
-  try{
-
-    mostrarLoginError(
-      "Iniciando sesión...",
-      false
-    );
-
+  try {
 
     await signInWithEmailAndPassword(
-
       auth,
-
       correo,
-
       password
-
     );
 
-
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
-    mostrarLoginError(
-      traducirErrorFirebase(error),
-      true
+    let texto =
+      "No se pudo iniciar sesión.";
+
+
+    if (
+      error.code ===
+      "auth/invalid-credential"
+    ) {
+
+      texto =
+        "Correo o contraseña incorrectos.";
+
+    }
+
+
+    if (
+      error.code ===
+      "auth/too-many-requests"
+    ) {
+
+      texto =
+        "Demasiados intentos. Intenta nuevamente más tarde.";
+
+    }
+
+
+    mensaje.textContent =
+      texto;
+
+    mensaje.classList.add(
+      "error"
     );
 
   }
@@ -2178,158 +2535,125 @@ async function loginAdministrador(){
 }
 
 
+async function cerrarSesion() {
 
-function mostrarLoginError(
-  texto,
-  error=true
-){
+  try {
 
-  const elemento =
-    document.getElementById(
-      "loginMensaje"
-    );
+    if (unsubscribeUsuarios)
+      unsubscribeUsuarios();
 
-  elemento.textContent =
-    texto;
+    if (unsubscribeAsistencias)
+      unsubscribeAsistencias();
 
-  elemento.className =
-    error
-      ? "message error"
-      : "message success";
+    if (unsubscribeUsuario)
+      unsubscribeUsuario();
 
-  elemento.style.display =
-    "block";
+    if (unsubscribeHistorialUsuario)
+      unsubscribeHistorialUsuario();
+
+
+    unsubscribeUsuarios = null;
+
+    unsubscribeAsistencias = null;
+
+    unsubscribeUsuario = null;
+
+    unsubscribeHistorialUsuario = null;
+
+
+    usuarios = [];
+
+    asistencias = [];
+
+    asistenciasUsuario = [];
+
+    usuarioActual = null;
+
+    usuarioLogueado = null;
+
+    esAdministrador = false;
+
+
+    await signOut(auth);
+
+
+    document
+      .getElementById("appPrincipal")
+      .classList.add("hidden");
+
+
+    document
+      .getElementById("pantallaLogin")
+      .classList.remove("hidden");
+
+
+    document
+      .getElementById("loginCorreo")
+      .value = "";
+
+    document
+      .getElementById("loginPassword")
+      .value = "";
+
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
 
 }
 
 
+window.iniciarSesion =
+  iniciarSesion;
 
-function traducirErrorFirebase(error){
-
-  const codigo =
-    error?.code || "";
-
-
-  if(
-    codigo.includes(
-      "invalid-credential"
-    )
-  ){
-
-    return "ID, PIN, correo o contraseña incorrectos.";
-
-  }
-
-
-  if(
-    codigo.includes(
-      "invalid-login-credentials"
-    )
-  ){
-
-    return "Datos de acceso incorrectos.";
-
-  }
-
-
-  if(
-    codigo.includes(
-      "too-many-requests"
-    )
-  ){
-
-    return "Demasiados intentos. Espera unos minutos.";
-
-  }
-
-
-  if(
-    codigo.includes(
-      "user-disabled"
-    )
-  ){
-
-    return "Esta cuenta está deshabilitada.";
-
-  }
-
-
-  return (
-    error?.message ||
-    "No se pudo iniciar sesión."
-  );
-
-}
-
+window.cerrarSesion =
+  cerrarSesion;
 
 
 /* =====================================================
-   AUTH STATE
+   DETECTAR USUARIO AUTH
 ===================================================== */
 
 onAuthStateChanged(
   auth,
   async user => {
 
-    if(!user){
+    if (!user) {
 
-      mostrarPantallaLogin();
+      document
+        .getElementById("pantallaLogin")
+        .classList.remove("hidden");
+
+
+      document
+        .getElementById("appPrincipal")
+        .classList.add("hidden");
+
 
       return;
 
     }
 
 
-    firebaseListo =
-      true;
+    usuarioLogueado =
+      user;
 
 
-    document
-      .getElementById(
-        "firebaseStatus"
-      )
-      .textContent =
-      "● Firebase conectado";
+    try {
 
+      await cargarRolUsuario();
 
-    try{
-
-      /*
-        Revisamos si este UID existe
-        en la colección admins.
-      */
-
-      const adminRef =
-        doc(
-          db,
-          "admins",
-          user.uid
-        );
-
-
-      const adminSnap =
-        await getDoc(adminRef);
-
-
-      if(adminSnap.exists()){
-
-        iniciarModoAdministrador();
-
-      }else{
-
-        iniciarModoUsuario(user);
-
-      }
-
-    }catch(error){
+    } catch (error) {
 
       console.error(error);
 
-      await signOut(auth);
-
-      mostrarLoginError(
-        "No se pudo verificar el tipo de usuario."
+      mostrarErrorLogin(
+        "No fue posible verificar los permisos."
       );
+
+      await signOut(auth);
 
     }
 
@@ -2337,602 +2661,149 @@ onAuthStateChanged(
 );
 
 
-
 /* =====================================================
-   PANTALLA LOGIN
+   DETERMINAR ROL
 ===================================================== */
 
-function mostrarPantallaLogin(){
+async function cargarRolUsuario() {
 
-  document
-    .getElementById("loginScreen")
-    .classList.remove("hidden");
-
-
-  document
-    .getElementById("adminPanel")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("userPanel")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("btnCerrarSesion")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("roleBadge")
-    .classList.add("hidden");
-
-
-  detenerListeners();
-
-}
-
-
-
-/* =====================================================
-   ADMIN
-===================================================== */
-
-function iniciarModoAdministrador(){
-
-  document
-    .getElementById("loginScreen")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("userPanel")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("adminPanel")
-    .classList.remove("hidden");
-
-
-  document
-    .getElementById("btnCerrarSesion")
-    .classList.remove("hidden");
-
-
-  const role =
-    document.getElementById(
-      "roleBadge"
-    );
-
-  role.textContent =
-    "👨‍💼 Administrador";
-
-  role.classList.remove(
-    "hidden"
-  );
-
-
-  iniciarListenersAdministrador();
-
-}
-
-
-
-/* =====================================================
-   USUARIO
-===================================================== */
-
-async function iniciarModoUsuario(user){
-
-  document
-    .getElementById("loginScreen")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("adminPanel")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("userPanel")
-    .classList.remove("hidden");
-
-
-  document
-    .getElementById("btnCerrarSesion")
-    .classList.remove("hidden");
-
-
-  const role =
-    document.getElementById(
-      "roleBadge"
-    );
-
-  role.textContent =
-    "👤 Usuario";
-
-  role.classList.remove(
-    "hidden"
-  );
-
-
-  /*
-    El email interno nos permite saber
-    qué SIRCA corresponde a esta cuenta.
-  */
-
-  const email =
-    user.email || "";
-
-
-  const id =
-    email
-      .split("@")[0]
-      .toUpperCase();
-
-
-  if(
-    !/^SIRCA-\d{3}$/.test(id)
-  ){
-
-    mostrarMensajeUsuario(
-      "La cuenta no tiene un ID SIRCA válido.",
-      "error"
-    );
-
-    await signOut(auth);
-
-    return;
-
-  }
-
-
-  cargarPerfilUsuario(id);
-
-}
-
-
-
-/* =====================================================
-   PERFIL USUARIO
-===================================================== */
-
-function cargarPerfilUsuario(id){
-
-  if(unsubUsuarioPerfil)
-    unsubUsuarioPerfil();
-
-
-  if(unsubAsistenciasUsuario)
-    unsubAsistenciasUsuario();
-
-
-  const usuarioRef =
+  const adminRef =
     doc(
       db,
-      "usuarios",
-      id
+      "admins",
+      usuarioLogueado.uid
     );
 
 
-  unsubUsuarioPerfil =
-    onSnapshot(
-      usuarioRef,
-
-      snapshot => {
-
-        if(!snapshot.exists()){
-
-          mostrarMensajeUsuario(
-            "No se encontró tu perfil.",
-            "error"
-          );
-
-          return;
-
-        }
+  const adminSnap =
+    await getDoc(adminRef);
 
 
-        usuarioPerfil = {
-
-          id,
-
-          ...snapshot.data()
-
-        };
-
-
-        mostrarPerfilUsuario();
-
-      },
-
-      error => {
-
-        console.error(error);
-
-        mostrarMensajeUsuario(
-          "No se pudo cargar tu perfil: " +
-          error.message,
-          "error"
-        );
-
-      }
-
-    );
-
-
-  /*
-    IMPORTANTE:
-    solo consulta asistencias cuyo usuarioId
-    corresponde al usuario.
-
-    Las reglas de Firestore también
-    deben proteger esta consulta.
-  */
-
-  const asistenciasRef =
-    collection(
-      db,
-      "asistencias"
-    );
-
-
-  const q =
-    query(
-
-      asistenciasRef,
-
-      where(
-        "usuarioId",
-        "==",
-        id
-      ),
-
-      orderBy(
-        "fechaHoraCreacion",
-        "desc"
-      ),
-
-      limit(1000)
-
-    );
-
-
-  unsubAsistenciasUsuario =
-    onSnapshot(
-
-      q,
-
-      snapshot => {
-
-        const lista = [];
-
-
-        snapshot.forEach(
-          documento => {
-
-            lista.push({
-
-              id:documento.id,
-
-              ...documento.data()
-
-            });
-
-          }
-        );
-
-
-        mostrarHistorialUsuario(
-          lista
-        );
-
-      },
-
-      error => {
-
-        console.error(error);
-
-        mostrarMensajeUsuario(
-          "No se pudo cargar tu historial: " +
-          error.message,
-          "error"
-        );
-
-      }
-
-    );
-
-}
-
-
-
-/* =====================================================
-   MOSTRAR PERFIL
-===================================================== */
-
-function mostrarPerfilUsuario(){
-
-  if(!usuarioPerfil)
-    return;
-
-
-  const usuario =
-    usuarioPerfil;
+  esAdministrador =
+    adminSnap.exists();
 
 
   document
-    .getElementById(
-      "perfilNombre"
-    )
-    .textContent =
-    usuario.nombre || "-";
+    .getElementById("pantallaLogin")
+    .classList.add("hidden");
 
 
   document
-    .getElementById(
-      "perfilID"
-    )
-    .textContent =
-    usuario.id;
+    .getElementById("appPrincipal")
+    .classList.remove("hidden");
 
 
   document
-    .getElementById(
-      "perfilEscuela"
-    )
+    .getElementById("userRole")
     .textContent =
-    usuario.escuela || "-";
+      esAdministrador
+        ? "👨‍💼 Administrador"
+        : "👤 Usuario";
 
 
   document
-    .getElementById(
-      "perfilArea"
-    )
+    .getElementById("firebaseStatus")
     .textContent =
-    usuario.area || "-";
+      "● Firebase conectado";
 
 
-  document
-    .getElementById(
-      "perfilTIA"
-    )
-    .textContent =
-    usuario.TIA || "-";
+  firebaseListo = true;
 
 
-  document
-    .getElementById(
-      "perfilCorreo"
-    )
-    .textContent =
-    usuario.correo || "-";
+  if (esAdministrador) {
 
+    mostrarPanelAdministrador();
 
-  document
-    .getElementById(
-      "perfilFechaIngreso"
-    )
-    .textContent =
-    usuario.fechaIngreso || "-";
+    iniciarAdministrador();
 
+  } else {
 
-  document
-    .getElementById(
-      "perfilFechaEgreso"
-    )
-    .textContent =
-    usuario.fechaEgreso || "-";
+    mostrarPanelUsuario();
 
-
-  const estado =
-    document.getElementById(
-      "perfilEstado"
-    );
-
-
-  if(usuario.dentro){
-
-    estado.textContent =
-      "● Dentro";
-
-    estado.className =
-      "status status-dentro";
-
-  }else{
-
-    estado.textContent =
-      "● Fuera";
-
-    estado.className =
-      "status status-fuera";
+    iniciarUsuario();
 
   }
 
-
-  const solicitadas =
-    Number(
-      usuario.horasSolicitadas || 0
-    );
+}
 
 
-  const acumuladas =
-    Number(
-      usuario.horasAcumuladas || 0
-    );
+/* =====================================================
+   MOSTRAR PANELES
+===================================================== */
 
+function mostrarPanelAdministrador() {
 
-  const faltantes =
-    Math.max(
-      0,
-      solicitadas - acumuladas
-    );
+  document
+    .getElementById("panelAdministrador")
+    .classList.remove("hidden");
 
 
   document
-    .getElementById(
-      "perfilHorasSolicitadas"
-    )
-    .textContent =
-    formatoHoras(
-      solicitadas
-    );
-
-
-  document
-    .getElementById(
-      "perfilHorasAcumuladas"
-    )
-    .textContent =
-    formatoHoras(
-      acumuladas
-    );
-
-
-  document
-    .getElementById(
-      "perfilHorasFaltantes"
-    )
-    .textContent =
-    formatoHoras(
-      faltantes
-    );
-
-
-  const avatar =
-    document.getElementById(
-      "perfilAvatar"
-    );
-
-
-  const nombre =
-    usuario.nombre || "S";
-
-
-  avatar.textContent =
-    nombre
-      .charAt(0)
-      .toUpperCase();
-
-
-  avatar.style.background =
-    usuario.color ||
-    "#155b91";
+    .getElementById("panelUsuario")
+    .classList.add("hidden");
 
 }
 
 
+function mostrarPanelUsuario() {
 
-/* =====================================================
-   HISTORIAL USUARIO
-===================================================== */
-
-function mostrarHistorialUsuario(
-  lista
-){
-
-  const tbody =
-    document.getElementById(
-      "tablaHistorialUsuario"
-    );
+  document
+    .getElementById("panelAdministrador")
+    .classList.add("hidden");
 
 
-  if(!lista.length){
-
-    tbody.innerHTML = `
-
-      <tr>
-
-        <td
-          colspan="4"
-          class="empty"
-        >
-          No tienes registros de asistencia.
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-
-  tbody.innerHTML = "";
-
-
-  lista.forEach(
-    asistencia => {
-
-      const tr =
-        document.createElement(
-          "tr"
-        );
-
-
-      tr.innerHTML = `
-
-        <td>
-          ${escapeHTML(
-            asistencia.fecha || "-"
-          )}
-        </td>
-
-        <td>
-          ${escapeHTML(
-            asistencia.entrada || "-"
-          )}
-        </td>
-
-        <td>
-          ${escapeHTML(
-            asistencia.salida || "-"
-          )}
-        </td>
-
-        <td>
-          ${formatoHoras(
-            asistencia.horas
-          )}
-        </td>
-
-      `;
-
-
-      tbody.appendChild(tr);
-
-    }
-  );
+  document
+    .getElementById("panelUsuario")
+    .classList.remove("hidden");
 
 }
 
 
+function mostrarErrorLogin(texto) {
+
+  const mensaje =
+    document
+      .getElementById("loginMensaje");
+
+
+  mensaje.textContent =
+    texto;
+
+  mensaje.className =
+    "login-message error";
+
+}
+
 
 /* =====================================================
-   LISTENERS ADMIN
+   ADMINISTRADOR
 ===================================================== */
 
-function iniciarListenersAdministrador(){
+function iniciarAdministrador() {
 
-  detenerListeners();
+  escucharUsuariosAdmin();
+
+  escucharAsistenciasAdmin();
+
+}
 
 
-  const usuariosRef =
+/* =====================================================
+   ESCUCHAR USUARIOS - ADMIN
+===================================================== */
+
+function escucharUsuariosAdmin() {
+
+  const ref =
     collection(
       db,
       "usuarios"
     );
 
 
-  unsubUsuarios =
+  unsubscribeUsuarios =
     onSnapshot(
-
-      usuariosRef,
-
+      ref,
       snapshot => {
 
         usuarios = [];
@@ -2943,7 +2814,8 @@ function iniciarListenersAdministrador(){
 
             usuarios.push({
 
-              id:docSnap.id,
+              id:
+                docSnap.id,
 
               ...docSnap.data()
 
@@ -2955,16 +2827,13 @@ function iniciarListenersAdministrador(){
 
         usuarios.sort(
           (a,b) =>
-            a.id.localeCompare(
-              b.id
-            )
+            a.id.localeCompare(b.id)
         );
 
 
-        actualizarTodo();
+        actualizarTodoAdmin();
 
       },
-
       error => {
 
         console.error(error);
@@ -2976,12 +2845,18 @@ function iniciarListenersAdministrador(){
         );
 
       }
-
     );
 
+}
 
 
-  const asistenciasRef =
+/* =====================================================
+   ESCUCHAR ASISTENCIAS - ADMIN
+===================================================== */
+
+function escucharAsistenciasAdmin() {
+
+  const ref =
     collection(
       db,
       "asistencias"
@@ -2990,24 +2865,18 @@ function iniciarListenersAdministrador(){
 
   const q =
     query(
-
-      asistenciasRef,
-
+      ref,
       orderBy(
         "fechaHoraCreacion",
         "desc"
       ),
-
       limit(1000)
-
     );
 
 
-  unsubAsistencias =
+  unsubscribeAsistencias =
     onSnapshot(
-
       q,
-
       snapshot => {
 
         asistencias = [];
@@ -3018,7 +2887,8 @@ function iniciarListenersAdministrador(){
 
             asistencias.push({
 
-              id:docSnap.id,
+              id:
+                docSnap.id,
 
               ...docSnap.data()
 
@@ -3028,10 +2898,9 @@ function iniciarListenersAdministrador(){
         );
 
 
-        actualizarTodo();
+        actualizarTodoAdmin();
 
       },
-
       error => {
 
         console.error(error);
@@ -3043,80 +2912,29 @@ function iniciarListenersAdministrador(){
         );
 
       }
-
     );
 
 }
-
-
-
-function detenerListeners(){
-
-  if(unsubUsuarios){
-
-    unsubUsuarios();
-
-    unsubUsuarios =
-      null;
-
-  }
-
-
-  if(unsubAsistencias){
-
-    unsubAsistencias();
-
-    unsubAsistencias =
-      null;
-
-  }
-
-
-  if(unsubUsuarioPerfil){
-
-    unsubUsuarioPerfil();
-
-    unsubUsuarioPerfil =
-      null;
-
-  }
-
-
-  if(unsubAsistenciasUsuario){
-
-    unsubAsistenciasUsuario();
-
-    unsubAsistenciasUsuario =
-      null;
-
-  }
-
-}
-
 
 
 /* =====================================================
    ACTUALIZAR ADMIN
 ===================================================== */
 
-function actualizarTodo(){
+function actualizarTodoAdmin() {
 
   document
-    .getElementById(
-      "totalUsuarios"
-    )
+    .getElementById("totalUsuarios")
     .textContent =
-    usuarios.length;
+      usuarios.length;
 
 
   document
-    .getElementById(
-      "usuariosDentro"
-    )
+    .getElementById("usuariosDentro")
     .textContent =
-    usuarios.filter(
-      u => u.dentro
-    ).length;
+      usuarios.filter(
+        u => u.dentro
+      ).length;
 
 
   mostrarUsuarios();
@@ -3128,24 +2946,23 @@ function actualizarTodo(){
 }
 
 
-
 /* =====================================================
-   USUARIOS ADMIN
+   MOSTRAR USUARIOS
 ===================================================== */
 
-function mostrarUsuarios(){
+function mostrarUsuarios() {
 
   const contenedor =
-    document.getElementById(
-      "usuariosGrid"
-    );
+    document
+      .getElementById("usuariosGrid");
 
 
   const buscar =
     (
-      document.getElementById(
-        "buscarUsuario"
-      )?.value || ""
+      document
+        .getElementById("buscarUsuario")
+        ?.value
+      || ""
     )
     .toLowerCase()
     .trim();
@@ -3185,22 +3002,22 @@ function mostrarUsuarios(){
     );
 
 
-  if(!lista.length){
+  if (
+    lista.length === 0
+  ) {
 
-    contenedor.innerHTML = `
-
-      <div class="empty">
+    contenedor.innerHTML =
+      `<div class="empty">
         No hay usuarios registrados.
-      </div>
-
-    `;
+      </div>`;
 
     return;
 
   }
 
 
-  contenedor.innerHTML = "";
+  contenedor.innerHTML =
+    "";
 
 
   lista.forEach(
@@ -3237,8 +3054,8 @@ function mostrarUsuarios(){
             style="background:${
               usuario.color ||
               obtenerColor(index)
-            }"
-          ></div>
+            }">
+          </div>
 
           <div>
 
@@ -3263,7 +3080,8 @@ function mostrarUsuarios(){
         <p>
           <strong>Escuela:</strong>
           ${escapeHTML(
-            usuario.escuela || "-"
+            usuario.escuela ||
+            "-"
           )}
         </p>
 
@@ -3271,51 +3089,60 @@ function mostrarUsuarios(){
         <p>
           <strong>Área:</strong>
           ${escapeHTML(
-            usuario.area || "-"
+            usuario.area ||
+            "-"
           )}
         </p>
 
 
         <div
           class="qr-mini"
-          id="${qrID}"
-        ></div>
+          id="${qrID}">
+        </div>
 
 
         <div
-          style="text-align:center;margin-bottom:10px"
-        >
+          style="
+            text-align:center;
+            margin-bottom:10px
+          ">
 
           ${
             usuario.dentro
 
             ?
 
-            `<span class="status status-dentro">
+            `<span
+              class="status status-dentro">
               ● Dentro
             </span>`
 
             :
 
-            `<span class="status status-fuera">
+            `<span
+              class="status status-fuera">
               ● Fuera
             </span>`
-
           }
 
         </div>
 
 
-        <div class="user-actions">
+        <div
+          class="user-actions">
+
 
           <button
             class="btn-primary"
             onclick="
               event.stopPropagation();
-              seleccionarUsuario('${usuario.id}')
-            "
-          >
+              seleccionarUsuario(
+                '${usuario.id}'
+              )
+            ">
+
             Seleccionar
+
           </button>
 
 
@@ -3323,53 +3150,62 @@ function mostrarUsuarios(){
             class="btn-secondary"
             onclick="
               event.stopPropagation();
-              descargarQR('${usuario.id}')
-            "
-          >
+              descargarQR(
+                '${usuario.id}'
+              )
+            ">
+
             QR
+
           </button>
+
 
         </div>
 
       `;
 
 
-      contenedor.appendChild(div);
+      contenedor.appendChild(
+        div
+      );
 
 
-      setTimeout(()=>{
+      setTimeout(
+        () => {
 
-        const qr =
-          document.getElementById(
-            qrID
-          );
+          const qrContenedor =
+            document.getElementById(
+              qrID
+            );
 
 
-        if(
-          qr &&
-          typeof QRCode !==
-            "undefined"
-        ){
+          if (
+            qrContenedor &&
+            typeof QRCode !==
+              "undefined"
+          ) {
 
-          new QRCode(
-            qr,
-            {
+            new QRCode(
+              qrContenedor,
+              {
 
-              text:
-                usuario.id,
+                text:
+                  usuario.id,
 
-              width:
-                100,
+                width:
+                  100,
 
-              height:
-                100
+                height:
+                  100
 
-            }
-          );
+              }
+            );
 
-        }
+          }
 
-      },0);
+        },
+        0
+      );
 
     }
   );
@@ -3377,12 +3213,15 @@ function mostrarUsuarios(){
 }
 
 
+window.mostrarUsuarios =
+  mostrarUsuarios;
+
 
 /* =====================================================
-   SELECCIONAR
+   SELECCIONAR USUARIO
 ===================================================== */
 
-function seleccionarUsuario(id){
+function seleccionarUsuario(id) {
 
   const usuario =
     usuarios.find(
@@ -3390,7 +3229,7 @@ function seleccionarUsuario(id){
     );
 
 
-  if(!usuario){
+  if (!usuario) {
 
     mostrarMensaje(
       "Usuario no encontrado.",
@@ -3411,12 +3250,15 @@ function seleccionarUsuario(id){
 }
 
 
+window.seleccionarUsuario =
+  seleccionarUsuario;
+
 
 /* =====================================================
-   ACTUALIZAR SELECCIONADO
+   USUARIO SELECCIONADO
 ===================================================== */
 
-function actualizarUsuarioSeleccionado(){
+function actualizarUsuarioSeleccionado() {
 
   const sinUsuario =
     document.getElementById(
@@ -3430,30 +3272,41 @@ function actualizarUsuarioSeleccionado(){
     );
 
 
-  if(!usuarioActual){
+  if (!usuarioActual) {
 
-    sinUsuario.classList.remove(
-      "hidden"
-    );
+    sinUsuario
+      .classList
+      .remove("hidden");
 
-    panel.classList.add(
-      "hidden"
-    );
 
-    document.getElementById(
-      "horasSolicitadas"
-    ).textContent =
-      "0";
+    panel
+      .classList
+      .add("hidden");
 
-    document.getElementById(
-      "horasAcumuladas"
-    ).textContent =
-      "0";
 
-    document.getElementById(
-      "horasFaltantes"
-    ).textContent =
-      "0";
+    document
+      .getElementById(
+        "horasSolicitadas"
+      )
+      .textContent =
+        "0";
+
+
+    document
+      .getElementById(
+        "horasAcumuladas"
+      )
+      .textContent =
+        "0";
+
+
+    document
+      .getElementById(
+        "horasFaltantes"
+      )
+      .textContent =
+        "0";
+
 
     return;
 
@@ -3462,12 +3315,13 @@ function actualizarUsuarioSeleccionado(){
 
   const usuario =
     usuarios.find(
-      u => u.id ===
+      u =>
+        u.id ===
         usuarioActual.id
     );
 
 
-  if(!usuario){
+  if (!usuario) {
 
     usuarioActual =
       null;
@@ -3483,49 +3337,62 @@ function actualizarUsuarioSeleccionado(){
     usuario;
 
 
-  sinUsuario.classList.add(
-    "hidden"
-  );
-
-  panel.classList.remove(
-    "hidden"
-  );
+  sinUsuario
+    .classList
+    .add("hidden");
 
 
-  document.getElementById(
-    "infoNombre"
-  ).textContent =
-    usuario.nombre || "-";
+  panel
+    .classList
+    .remove("hidden");
 
 
-  document.getElementById(
-    "infoEscuela"
-  ).textContent =
-    usuario.escuela || "-";
+  document
+    .getElementById(
+      "infoNombre"
+    )
+    .textContent =
+      usuario.nombre || "-";
 
 
-  document.getElementById(
-    "infoArea"
-  ).textContent =
-    usuario.area || "-";
+  document
+    .getElementById(
+      "infoEscuela"
+    )
+    .textContent =
+      usuario.escuela || "-";
 
 
-  document.getElementById(
-    "infoTIA"
-  ).textContent =
-    usuario.TIA || "-";
+  document
+    .getElementById(
+      "infoArea"
+    )
+    .textContent =
+      usuario.area || "-";
 
 
-  document.getElementById(
-    "infoCorreo"
-  ).textContent =
-    usuario.correo || "-";
+  document
+    .getElementById(
+      "infoTIA"
+    )
+    .textContent =
+      usuario.TIA || "-";
 
 
-  document.getElementById(
-    "infoID"
-  ).textContent =
-    usuario.id;
+  document
+    .getElementById(
+      "infoCorreo"
+    )
+    .textContent =
+      usuario.correo || "-";
+
+
+  document
+    .getElementById(
+      "infoID"
+    )
+    .textContent =
+      usuario.id;
 
 
   const estado =
@@ -3534,7 +3401,7 @@ function actualizarUsuarioSeleccionado(){
     );
 
 
-  if(usuario.dentro){
+  if (usuario.dentro) {
 
     estado.textContent =
       "● Dentro";
@@ -3542,7 +3409,7 @@ function actualizarUsuarioSeleccionado(){
     estado.className =
       "status status-dentro";
 
-  }else{
+  } else {
 
     estado.textContent =
       "● Fuera";
@@ -3568,42 +3435,48 @@ function actualizarUsuarioSeleccionado(){
   const faltantes =
     Math.max(
       0,
-      solicitadas - acumuladas
-    );
-
-
-  document.getElementById(
-    "horasSolicitadas"
-  ).textContent =
-    formatoHoras(
-      solicitadas
-    );
-
-
-  document.getElementById(
-    "horasAcumuladas"
-  ).textContent =
-    formatoHoras(
+      solicitadas -
       acumuladas
     );
 
 
-  document.getElementById(
-    "horasFaltantes"
-  ).textContent =
-    formatoHoras(
-      faltantes
-    );
+  document
+    .getElementById(
+      "horasSolicitadas"
+    )
+    .textContent =
+      formatoHoras(
+        solicitadas
+      );
+
+
+  document
+    .getElementById(
+      "horasAcumuladas"
+    )
+    .textContent =
+      formatoHoras(
+        acumuladas
+      );
+
+
+  document
+    .getElementById(
+      "horasFaltantes"
+    )
+    .textContent =
+      formatoHoras(
+        faltantes
+      );
 
 }
-
 
 
 /* =====================================================
    SCANNER
 ===================================================== */
 
-async function abrirScanner(){
+async function abrirScanner() {
 
   const modal =
     document.getElementById(
@@ -3611,12 +3484,12 @@ async function abrirScanner(){
     );
 
 
-  modal.classList.add(
-    "active"
-  );
+  modal
+    .classList
+    .add("active");
 
 
-  if(scannerActivo)
+  if (scannerActivo)
     return;
 
 
@@ -3626,7 +3499,7 @@ async function abrirScanner(){
     );
 
 
-  try{
+  try {
 
     await scanner.start(
 
@@ -3636,8 +3509,8 @@ async function abrirScanner(){
       },
 
       {
-        fps:10,
-        qrbox:250
+        fps: 10,
+        qrbox: 250
       },
 
       texto => {
@@ -3656,7 +3529,7 @@ async function abrirScanner(){
     scannerActivo =
       true;
 
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -3671,8 +3544,7 @@ async function abrirScanner(){
 }
 
 
-
-async function cerrarScanner(){
+async function cerrarScanner() {
 
   const modal =
     document.getElementById(
@@ -3680,23 +3552,23 @@ async function cerrarScanner(){
     );
 
 
-  modal.classList.remove(
-    "active"
-  );
+  modal
+    .classList
+    .remove("active");
 
 
-  if(
+  if (
     scanner &&
     scannerActivo
-  ){
+  ) {
 
-    try{
+    try {
 
       await scanner.stop();
 
       await scanner.clear();
 
-    }catch(error){
+    } catch (error) {
 
       console.error(error);
 
@@ -3705,8 +3577,7 @@ async function cerrarScanner(){
   }
 
 
-  scanner =
-    null;
+  scanner = null;
 
   scannerActivo =
     false;
@@ -3714,8 +3585,18 @@ async function cerrarScanner(){
 }
 
 
+window.abrirScanner =
+  abrirScanner;
 
-async function procesarQR(texto){
+window.cerrarScanner =
+  cerrarScanner;
+
+
+/* =====================================================
+   PROCESAR QR
+===================================================== */
+
+async function procesarQR(texto) {
 
   texto =
     String(
@@ -3727,7 +3608,7 @@ async function procesarQR(texto){
     texto;
 
 
-  try{
+  try {
 
     const url =
       new URL(texto);
@@ -3739,17 +3620,23 @@ async function procesarQR(texto){
       );
 
 
-    if(idURL)
-      id = idURL;
+    if (idURL) {
 
-  }catch(e){}
+      id =
+        idURL;
+
+    }
+
+  } catch (e) {}
 
 
   id =
-    id.trim().toUpperCase();
+    id
+      .trim()
+      .toUpperCase();
 
 
-  if(scannerActivo){
+  if (scannerActivo) {
 
     await cerrarScanner();
 
@@ -3762,7 +3649,7 @@ async function procesarQR(texto){
     );
 
 
-  if(!usuario){
+  if (!usuario) {
 
     abrirRegistroQR(id);
 
@@ -3774,13 +3661,13 @@ async function procesarQR(texto){
   seleccionarUsuario(id);
 
 
-  if(usuario.dentro){
+  if (usuario.dentro) {
 
     await registrarSalida(
       usuario
     );
 
-  }else{
+  } else {
 
     await registrarEntrada(
       usuario
@@ -3791,18 +3678,17 @@ async function procesarQR(texto){
 }
 
 
-
 /* =====================================================
    NUEVO USUARIO
 ===================================================== */
 
-function nuevoUsuarioManual(){
+function nuevoUsuarioManual() {
 
   const id =
     generarID();
 
 
-  if(!id){
+  if (!id) {
 
     mostrarMensaje(
       "Ya se utilizaron los 20 IDs disponibles.",
@@ -3819,93 +3705,142 @@ function nuevoUsuarioManual(){
 }
 
 
+window.nuevoUsuarioManual =
+  nuevoUsuarioManual;
 
-function abrirRegistroQR(id){
+
+/* =====================================================
+   ABRIR REGISTRO
+===================================================== */
+
+function abrirRegistroQR(id) {
 
   idQRpendiente =
     id;
 
 
-  document.getElementById(
-    "nuevoUsuarioID"
-  ).textContent =
-    id;
+  document
+    .getElementById(
+      "nuevoUsuarioID"
+    )
+    .textContent =
+      id;
 
 
-  document.getElementById(
-    "nuevoNombre"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevoNombre"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevaEscuela"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevaEscuela"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevaArea"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevaArea"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "TIA"
-  ).value = "";
+  document
+    .getElementById(
+      "TIA"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevoCorreo"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevoCorreo"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevaFechaIngreso"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevaFechaIngreso"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevaFechaEgreso"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevaFechaEgreso"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "nuevasHoras"
-  ).value = "480";
+  document
+    .getElementById(
+      "nuevasHoras"
+    )
+    .value =
+      "480";
 
 
-  document.getElementById(
-    "nuevaCredencial"
-  ).value = "";
+  document
+    .getElementById(
+      "nuevaCredencial"
+    )
+    .value =
+      "";
 
 
-  document.getElementById(
-    "previewCredencial"
-  ).classList.add(
-    "hidden"
-  );
+  document
+    .getElementById(
+      "previewCredencial"
+    )
+    .classList
+    .add("hidden");
 
 
-  document.getElementById(
-    "previewCredencial"
-  ).src = "";
+  document
+    .getElementById(
+      "previewCredencial"
+    )
+    .src =
+      "";
 
 
-  document.getElementById(
-    "modalRegistro"
-  ).classList.add(
-    "active"
-  );
+  document
+    .getElementById(
+      "modalRegistro"
+    )
+    .classList
+    .add("active");
 
 }
 
 
+window.abrirRegistroQR =
+  abrirRegistroQR;
 
-function cerrarModalRegistro(){
 
-  document.getElementById(
-    "modalRegistro"
-  ).classList.remove(
-    "active"
-  );
+/* =====================================================
+   CERRAR REGISTRO
+===================================================== */
+
+function cerrarModalRegistro() {
+
+  document
+    .getElementById(
+      "modalRegistro"
+    )
+    .classList
+    .remove("active");
 
 
   idQRpendiente =
@@ -3914,9 +3849,12 @@ function cerrarModalRegistro(){
 }
 
 
+window.cerrarModalRegistro =
+  cerrarModalRegistro;
+
 
 /* =====================================================
-   CREDENCIAL
+   PREVIEW CREDENCIAL
 ===================================================== */
 
 document
@@ -3925,7 +3863,7 @@ document
   )
   .addEventListener(
     "change",
-    function(){
+    function() {
 
       const archivo =
         this.files[0];
@@ -3937,11 +3875,11 @@ document
         );
 
 
-      if(!archivo){
+      if (!archivo) {
 
-        preview.classList.add(
-          "hidden"
-        );
+        preview
+          .classList
+          .add("hidden");
 
         preview.src =
           "";
@@ -3951,11 +3889,12 @@ document
       }
 
 
-      if(
-        !archivo.type.startsWith(
-          "image/"
-        )
-      ){
+      if (
+        !archivo.type
+          .startsWith(
+            "image/"
+          )
+      ) {
 
         mostrarMensaje(
           "La credencial debe ser una imagen.",
@@ -3975,14 +3914,14 @@ document
 
 
       reader.onload =
-        function(e){
+        function(e) {
 
           preview.src =
             e.target.result;
 
-          preview.classList.remove(
-            "hidden"
-          );
+          preview
+            .classList
+            .remove("hidden");
 
         };
 
@@ -3995,15 +3934,18 @@ document
   );
 
 
+/* =====================================================
+   COMPRIMIR IMAGEN
+===================================================== */
 
 function comprimirImagen(
   file,
-  maxWidth=900,
-  calidad=.7
-){
+  maxWidth = 900,
+  calidad = 0.7
+) {
 
   return new Promise(
-    (resolve,reject)=>{
+    (resolve,reject) => {
 
       const reader =
         new FileReader();
@@ -4017,7 +3959,7 @@ function comprimirImagen(
 
 
           img.onload =
-            ()=>{
+            () => {
 
               let width =
                 img.width;
@@ -4026,7 +3968,10 @@ function comprimirImagen(
                 img.height;
 
 
-              if(width > maxWidth){
+              if (
+                width >
+                maxWidth
+              ) {
 
                 height =
                   height *
@@ -4040,9 +3985,10 @@ function comprimirImagen(
 
 
               const canvas =
-                document.createElement(
-                  "canvas"
-                );
+                document
+                  .createElement(
+                    "canvas"
+                  );
 
 
               canvas.width =
@@ -4084,6 +4030,7 @@ function comprimirImagen(
           img.onerror =
             reject;
 
+
           img.src =
             event.target.result;
 
@@ -4104,17 +4051,16 @@ function comprimirImagen(
 }
 
 
-
 /* =====================================================
-   REGISTRAR USUARIO
+   REGISTRAR NUEVO USUARIO
 ===================================================== */
 
-async function registrarNuevoUsuario(){
+async function registrarNuevoUsuario() {
 
-  if(!firebaseListo){
+  if (!esAdministrador) {
 
     mostrarMensaje(
-      "Firebase todavía no está conectado.",
+      "No tienes permisos para registrar usuarios.",
       "error"
     );
 
@@ -4127,7 +4073,7 @@ async function registrarNuevoUsuario(){
     idQRpendiente;
 
 
-  if(!id){
+  if (!id) {
 
     mostrarMensaje(
       "No hay un ID QR disponible.",
@@ -4140,12 +4086,15 @@ async function registrarNuevoUsuario(){
 
 
   const nombre =
-    document.getElementById(
-      "nuevoNombre"
-    ).value.trim();
+    document
+      .getElementById(
+        "nuevoNombre"
+      )
+      .value
+      .trim();
 
 
-  if(!nombre){
+  if (!nombre) {
 
     mostrarMensaje(
       "Captura el nombre completo.",
@@ -4159,16 +4108,18 @@ async function registrarNuevoUsuario(){
 
   const horas =
     Number(
-      document.getElementById(
-        "nuevasHoras"
-      ).value
+      document
+        .getElementById(
+          "nuevasHoras"
+        )
+        .value
     );
 
 
-  if(
+  if (
     isNaN(horas) ||
     horas < 0
-  ){
+  ) {
 
     mostrarMensaje(
       "Captura correctamente las horas solicitadas.",
@@ -4181,39 +4132,68 @@ async function registrarNuevoUsuario(){
 
 
   const escuela =
-    document.getElementById(
-      "nuevaEscuela"
-    ).value.trim();
+    document
+      .getElementById(
+        "nuevaEscuela"
+      )
+      .value
+      .trim();
 
 
   const area =
-    document.getElementById(
-      "nuevaArea"
-    ).value.trim();
+    document
+      .getElementById(
+        "nuevaArea"
+      )
+      .value
+      .trim();
 
 
   const TIA =
-    document.getElementById(
-      "TIA"
-    ).value.trim();
+    document
+      .getElementById(
+        "TIA"
+      )
+      .value
+      .trim();
 
 
   const correo =
-    document.getElementById(
-      "nuevoCorreo"
-    ).value.trim();
+    document
+      .getElementById(
+        "nuevoCorreo"
+      )
+      .value
+      .trim()
+      .toLowerCase();
 
 
   const fechaIngreso =
-    document.getElementById(
-      "nuevaFechaIngreso"
-    ).value;
+    document
+      .getElementById(
+        "nuevaFechaIngreso"
+      )
+      .value;
 
 
   const fechaEgreso =
-    document.getElementById(
-      "nuevaFechaEgreso"
-    ).value;
+    document
+      .getElementById(
+        "nuevaFechaEgreso"
+      )
+      .value;
+
+
+  if (!correo) {
+
+    mostrarMensaje(
+      "Captura el correo del usuario.",
+      "error"
+    );
+
+    return;
+
+  }
 
 
   let credencial =
@@ -4221,14 +4201,16 @@ async function registrarNuevoUsuario(){
 
 
   const archivo =
-    document.getElementById(
-      "nuevaCredencial"
-    ).files[0];
+    document
+      .getElementById(
+        "nuevaCredencial"
+      )
+      .files[0];
 
 
-  try{
+  try {
 
-    if(archivo){
+    if (archivo) {
 
       credencial =
         await comprimirImagen(
@@ -4236,10 +4218,10 @@ async function registrarNuevoUsuario(){
         );
 
 
-      if(
+      if (
         credencial.length >
         900000
-      ){
+      ) {
 
         mostrarMensaje(
           "La imagen de la credencial es demasiado grande.",
@@ -4271,7 +4253,9 @@ async function registrarNuevoUsuario(){
           );
 
 
-        if(existente.exists()){
+        if (
+          existente.exists()
+        ) {
 
           throw new Error(
             "Ese ID ya está registrado."
@@ -4347,30 +4331,7 @@ async function registrarNuevoUsuario(){
     );
 
 
-    setTimeout(()=>{
-
-      const nuevo =
-        usuarios.find(
-          u => u.id === id
-        );
-
-
-      if(nuevo){
-
-        seleccionarUsuario(
-          id
-        );
-
-        registrarEntrada(
-          nuevo
-        );
-
-      }
-
-    },1000);
-
-
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -4385,6 +4346,9 @@ async function registrarNuevoUsuario(){
 }
 
 
+window.registrarNuevoUsuario =
+  registrarNuevoUsuario;
+
 
 /* =====================================================
    ENTRADA
@@ -4392,12 +4356,12 @@ async function registrarNuevoUsuario(){
 
 async function registrarEntrada(
   usuario
-){
+) {
 
-  if(!firebaseListo){
+  if (!esAdministrador) {
 
     mostrarMensaje(
-      "Firebase no está conectado.",
+      "Solo el administrador puede registrar entradas.",
       "error"
     );
 
@@ -4406,7 +4370,7 @@ async function registrarEntrada(
   }
 
 
-  try{
+  try {
 
     const usuarioRef =
       doc(
@@ -4435,9 +4399,9 @@ async function registrarEntrada(
           );
 
 
-        if(
+        if (
           !usuarioSnap.exists()
-        ){
+        ) {
 
           throw new Error(
             "El usuario no existe."
@@ -4464,10 +4428,11 @@ async function registrarEntrada(
           );
 
 
-        if(
+        if (
           solicitadas > 0 &&
-          acumuladas >= solicitadas
-        ){
+          acumuladas >=
+            solicitadas
+        ) {
 
           throw new Error(
             "El usuario ya completó sus horas."
@@ -4476,7 +4441,7 @@ async function registrarEntrada(
         }
 
 
-        if(datos.dentro){
+        if (datos.dentro) {
 
           throw new Error(
             "El usuario ya se encuentra dentro."
@@ -4505,6 +4470,9 @@ async function registrarEntrada(
             nombre:
               datos.nombre,
 
+            correo:
+              datos.correo || "",
+
             fecha:
               ahora.toLocaleDateString(
                 "es-MX"
@@ -4514,19 +4482,27 @@ async function registrarEntrada(
               ahora.toLocaleTimeString(
                 "es-MX",
                 {
-                  hour:"2-digit",
-                  minute:"2-digit",
-                  second:"2-digit"
+                  hour:
+                    "2-digit",
+
+                  minute:
+                    "2-digit",
+
+                  second:
+                    "2-digit"
                 }
               ),
 
-            salida:"",
+            salida:
+              "",
 
-            horas:0,
+            horas:
+              0,
 
             entradaTimestamp,
 
-            salidaTimestamp:null,
+            salidaTimestamp:
+              null,
 
             fechaHoraCreacion:
               entradaTimestamp
@@ -4539,7 +4515,8 @@ async function registrarEntrada(
           usuarioRef,
           {
 
-            dentro:true,
+            dentro:
+              true,
 
             asistenciaAbiertaId:
               asistenciaRef.id,
@@ -4564,7 +4541,7 @@ async function registrarEntrada(
     );
 
 
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -4578,19 +4555,18 @@ async function registrarEntrada(
 }
 
 
-
 /* =====================================================
    SALIDA
 ===================================================== */
 
 async function registrarSalida(
   usuario
-){
+) {
 
-  if(!firebaseListo){
+  if (!esAdministrador) {
 
     mostrarMensaje(
-      "Firebase no está conectado.",
+      "Solo el administrador puede registrar salidas.",
       "error"
     );
 
@@ -4599,7 +4575,7 @@ async function registrarSalida(
   }
 
 
-  try{
+  try {
 
     const usuarioRef =
       doc(
@@ -4619,9 +4595,9 @@ async function registrarSalida(
           );
 
 
-        if(
+        if (
           !usuarioSnap.exists()
-        ){
+        ) {
 
           throw new Error(
             "El usuario no existe."
@@ -4634,10 +4610,10 @@ async function registrarSalida(
           usuarioSnap.data();
 
 
-        if(
+        if (
           !datos.dentro ||
           !datos.asistenciaAbiertaId
-        ){
+        ) {
 
           throw new Error(
             "El usuario no tiene una entrada abierta."
@@ -4660,9 +4636,9 @@ async function registrarSalida(
           );
 
 
-        if(
+        if (
           !asistenciaSnap.exists()
-        ){
+        ) {
 
           throw new Error(
             "No se encontró la asistencia abierta."
@@ -4679,7 +4655,9 @@ async function registrarSalida(
           asistencia.entradaTimestamp;
 
 
-        if(!entradaTimestamp){
+        if (
+          !entradaTimestamp
+        ) {
 
           throw new Error(
             "La entrada no tiene fecha válida."
@@ -4711,7 +4689,7 @@ async function registrarSalida(
           Math.max(
             0,
             milisegundos /
-            3600000
+              3600000
           );
 
 
@@ -4730,9 +4708,14 @@ async function registrarSalida(
               ahora.toLocaleTimeString(
                 "es-MX",
                 {
-                  hour:"2-digit",
-                  minute:"2-digit",
-                  second:"2-digit"
+                  hour:
+                    "2-digit",
+
+                  minute:
+                    "2-digit",
+
+                  second:
+                    "2-digit"
                 }
               ),
 
@@ -4751,7 +4734,8 @@ async function registrarSalida(
           usuarioRef,
           {
 
-            dentro:false,
+            dentro:
+              false,
 
             asistenciaAbiertaId:
               null,
@@ -4785,7 +4769,7 @@ async function registrarSalida(
     );
 
 
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -4799,37 +4783,16 @@ async function registrarSalida(
 }
 
 
-
 /* =====================================================
    ENTRADA MANUAL
 ===================================================== */
 
-async function registrarEntradaManual(){
+async function registrarEntradaManual() {
 
-  if(!usuarioActual){
+  if (!usuarioActual) {
 
     mostrarMensaje(
       "Primero selecciona un usuario.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const usuario =
-    usuarios.find(
-      u =>
-        u.id ===
-        usuarioActual.id
-    );
-
-
-  if(!usuario){
-
-    mostrarMensaje(
-      "Usuario no encontrado.",
       "error"
     );
 
@@ -4839,20 +4802,23 @@ async function registrarEntradaManual(){
 
 
   await registrarEntrada(
-    usuario
+    usuarioActual
   );
 
 }
 
+
+window.registrarEntradaManual =
+  registrarEntradaManual;
 
 
 /* =====================================================
    SALIDA MANUAL
 ===================================================== */
 
-async function registrarSalidaManual(){
+async function registrarSalidaManual() {
 
-  if(!usuarioActual){
+  if (!usuarioActual) {
 
     mostrarMensaje(
       "Primero selecciona un usuario.",
@@ -4864,44 +4830,30 @@ async function registrarSalidaManual(){
   }
 
 
-  const usuario =
-    usuarios.find(
-      u =>
-        u.id ===
-        usuarioActual.id
-    );
-
-
-  if(!usuario){
-
-    mostrarMensaje(
-      "Usuario no encontrado.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
   await registrarSalida(
-    usuario
+    usuarioActual
   );
 
 }
 
+
+window.registrarSalidaManual =
+  registrarSalidaManual;
 
 
 /* =====================================================
    GUARDAR USUARIO
 ===================================================== */
 
-async function guardarUsuario(){
+async function guardarUsuario() {
 
-  if(!usuarioActual){
+  if (
+    !esAdministrador ||
+    !usuarioActual
+  ) {
 
     mostrarMensaje(
-      "No hay usuario seleccionado.",
+      "No tienes permisos.",
       "error"
     );
 
@@ -4910,7 +4862,7 @@ async function guardarUsuario(){
   }
 
 
-  try{
+  try {
 
     const usuarioRef =
       doc(
@@ -4921,33 +4873,43 @@ async function guardarUsuario(){
 
 
     const nombre =
-      document.getElementById(
-        "infoNombre"
-      ).textContent;
+      document
+        .getElementById(
+          "infoNombre"
+        )
+        .textContent;
 
 
     const escuela =
-      document.getElementById(
-        "infoEscuela"
-      ).textContent;
+      document
+        .getElementById(
+          "infoEscuela"
+        )
+        .textContent;
 
 
     const area =
-      document.getElementById(
-        "infoArea"
-      ).textContent;
+      document
+        .getElementById(
+          "infoArea"
+        )
+        .textContent;
 
 
     const TIA =
-      document.getElementById(
-        "infoTIA"
-      ).textContent;
+      document
+        .getElementById(
+          "infoTIA"
+        )
+        .textContent;
 
 
     const correo =
-      document.getElementById(
-        "infoCorreo"
-      ).textContent;
+      document
+        .getElementById(
+          "infoCorreo"
+        )
+        .textContent;
 
 
     await runTransaction(
@@ -4960,7 +4922,9 @@ async function guardarUsuario(){
           );
 
 
-        if(!snap.exists()){
+        if (
+          !snap.exists()
+        ) {
 
           throw new Error(
             "Usuario no encontrado."
@@ -4995,7 +4959,7 @@ async function guardarUsuario(){
     );
 
 
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -5010,12 +4974,15 @@ async function guardarUsuario(){
 }
 
 
+window.guardarUsuario =
+  guardarUsuario;
+
 
 /* =====================================================
    HISTORIAL ADMIN
 ===================================================== */
 
-function mostrarHistorial(){
+function mostrarHistorial() {
 
   const tbody =
     document.getElementById(
@@ -5025,9 +4992,12 @@ function mostrarHistorial(){
 
   const buscar =
     (
-      document.getElementById(
-        "buscarHistorial"
-      )?.value || ""
+      document
+        .getElementById(
+          "buscarHistorial"
+        )
+        ?.value
+      || ""
     )
     .toLowerCase()
     .trim();
@@ -5061,7 +5031,9 @@ function mostrarHistorial(){
     );
 
 
-  if(!lista.length){
+  if (
+    lista.length === 0
+  ) {
 
     tbody.innerHTML = `
 
@@ -5069,9 +5041,10 @@ function mostrarHistorial(){
 
         <td
           colspan="5"
-          class="empty"
-        >
+          class="empty">
+
           No hay registros de asistencia.
+
         </td>
 
       </tr>
@@ -5083,7 +5056,8 @@ function mostrarHistorial(){
   }
 
 
-  tbody.innerHTML = "";
+  tbody.innerHTML =
+    "";
 
 
   lista.forEach(
@@ -5099,25 +5073,29 @@ function mostrarHistorial(){
 
         <td>
           ${escapeHTML(
-            asistencia.nombre || "-"
+            asistencia.nombre ||
+            "-"
           )}
         </td>
 
         <td>
           ${escapeHTML(
-            asistencia.fecha || "-"
+            asistencia.fecha ||
+            "-"
           )}
         </td>
 
         <td>
           ${escapeHTML(
-            asistencia.entrada || "-"
+            asistencia.entrada ||
+            "-"
           )}
         </td>
 
         <td>
           ${escapeHTML(
-            asistencia.salida || "-"
+            asistencia.salida ||
+            "-"
           )}
         </td>
 
@@ -5130,7 +5108,9 @@ function mostrarHistorial(){
       `;
 
 
-      tbody.appendChild(tr);
+      tbody.appendChild(
+        tr
+      );
 
     }
   );
@@ -5138,14 +5118,17 @@ function mostrarHistorial(){
 }
 
 
+window.mostrarHistorial =
+  mostrarHistorial;
+
 
 /* =====================================================
-   HISTORIAL DEL USUARIO ADMIN
+   HISTORIAL USUARIO SELECCIONADO
 ===================================================== */
 
-function verHistorialUsuario(){
+function verHistorialUsuario() {
 
-  if(!usuarioActual){
+  if (!usuarioActual) {
 
     mostrarMensaje(
       "Selecciona un usuario primero.",
@@ -5176,18 +5159,22 @@ function verHistorialUsuario(){
       "historialCard"
     )
     .scrollIntoView({
-      behavior:"smooth"
+      behavior:
+        "smooth"
     });
 
 }
 
+
+window.verHistorialUsuario =
+  verHistorialUsuario;
 
 
 /* =====================================================
    QR
 ===================================================== */
 
-function descargarQR(id){
+function descargarQR(id) {
 
   const temporal =
     document.createElement(
@@ -5214,11 +5201,14 @@ function descargarQR(id){
     temporal,
     {
 
-      text:id,
+      text:
+        id,
 
-      width:500,
+      width:
+        500,
 
-      height:500,
+      height:
+        500,
 
       correctLevel:
         QRCode.CorrectLevel.H
@@ -5227,62 +5217,84 @@ function descargarQR(id){
   );
 
 
-  setTimeout(()=>{
+  setTimeout(
+    () => {
 
-    const canvas =
-      temporal.querySelector(
-        "canvas"
-      );
+      const canvas =
+        temporal.querySelector(
+          "canvas"
+        );
 
 
-    if(!canvas){
+      if (!canvas) {
+
+        temporal.remove();
+
+        mostrarMensaje(
+          "No se pudo generar el QR.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      const enlace =
+        document.createElement(
+          "a"
+        );
+
+
+      enlace.download =
+        id + ".png";
+
+
+      enlace.href =
+        canvas.toDataURL(
+          "image/png"
+        );
+
+
+      enlace.click();
+
 
       temporal.remove();
 
-      mostrarMensaje(
-        "No se pudo generar el QR.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const enlace =
-      document.createElement(
-        "a"
-      );
-
-
-    enlace.download =
-      id + ".png";
-
-
-    enlace.href =
-      canvas.toDataURL(
-        "image/png"
-      );
-
-
-    enlace.click();
-
-
-    temporal.remove();
-
-  },300);
+    },
+    300
+  );
 
 }
 
 
+window.descargarQR =
+  descargarQR;
+
 
 /* =====================================================
-   CSV
+   EXPORTAR CSV
 ===================================================== */
 
-function exportarCSV(){
+function exportarCSV() {
 
-  if(!asistencias.length){
+  if (
+    !esAdministrador
+  ) {
+
+    mostrarMensaje(
+      "No tienes permisos.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    asistencias.length === 0
+  ) {
 
     mostrarMensaje(
       "No hay datos para exportar.",
@@ -5311,15 +5323,10 @@ function exportarCSV(){
       a => [
 
         a.usuarioId || "",
-
         a.nombre || "",
-
         a.fecha || "",
-
         a.entrada || "",
-
         a.salida || "",
-
         a.horas || 0
 
       ]
@@ -5329,7 +5336,6 @@ function exportarCSV(){
   const csv = [
 
     encabezados,
-
     ...filas
 
   ]
@@ -5339,11 +5345,12 @@ function exportarCSV(){
       fila
         .map(
           valor =>
-            `"${String(valor)
-              .replace(
-                /"/g,
-                '""'
-              )}"`
+            `"${String(
+              valor
+            ).replace(
+              /"/g,
+              '""'
+            )}"`
         )
         .join(",")
   )
@@ -5394,23 +5401,42 @@ function exportarCSV(){
 }
 
 
+window.exportarCSV =
+  exportarCSV;
+
 
 /* =====================================================
    LIMPIAR HISTORIAL
 ===================================================== */
 
-async function limpiarHistorial(){
+async function limpiarHistorial() {
 
-  if(!confirm(
-    "¿Seguro que deseas eliminar TODO el historial de asistencia?"
-  )){
+  if (
+    !esAdministrador
+  ) {
+
+    mostrarMensaje(
+      "No tienes permisos.",
+      "error"
+    );
 
     return;
 
   }
 
 
-  try{
+  if (
+    !confirm(
+      "¿Seguro que deseas eliminar TODO el historial de asistencia?"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  try {
 
     const snapshot =
       await getDocs(
@@ -5429,20 +5455,21 @@ async function limpiarHistorial(){
       0;
 
 
-    for(
+    for (
       const documento
       of snapshot.docs
-    ){
+    ) {
 
       batch.delete(
         documento.ref
       );
 
-
       contador++;
 
 
-      if(contador === 450){
+      if (
+        contador === 450
+      ) {
 
         await batch.commit();
 
@@ -5457,7 +5484,9 @@ async function limpiarHistorial(){
     }
 
 
-    if(contador > 0){
+    if (
+      contador > 0
+    ) {
 
       await batch.commit();
 
@@ -5473,10 +5502,10 @@ async function limpiarHistorial(){
       );
 
 
-    for(
+    for (
       const documento
       of usuariosSnapshot.docs
-    ){
+    ) {
 
       const usuarioRef =
         documento.ref;
@@ -5492,7 +5521,9 @@ async function limpiarHistorial(){
             );
 
 
-          if(!snap.exists())
+          if (
+            !snap.exists()
+          )
             return;
 
 
@@ -5500,7 +5531,8 @@ async function limpiarHistorial(){
             usuarioRef,
             {
 
-              dentro:false,
+              dentro:
+                false,
 
               asistenciaAbiertaId:
                 null,
@@ -5525,7 +5557,7 @@ async function limpiarHistorial(){
     );
 
 
-  }catch(error){
+  } catch (error) {
 
     console.error(error);
 
@@ -5540,107 +5572,672 @@ async function limpiarHistorial(){
 }
 
 
+window.limpiarHistorial =
+  limpiarHistorial;
+
 
 /* =====================================================
-   CERRAR SESIÓN
+   INICIAR USUARIO NORMAL
 ===================================================== */
 
-async function cerrarSesion(){
+async function iniciarUsuario() {
 
-  try{
+  try {
 
-    if(scannerActivo){
+    const correo =
+      usuarioLogueado.email
+        .trim()
+        .toLowerCase();
 
-      await cerrarScanner();
+
+    const usuariosRef =
+      collection(
+        db,
+        "usuarios"
+      );
+
+
+    /*
+      IMPORTANTE:
+
+      El correo que está en Firebase Authentication
+      debe ser exactamente el mismo que está en:
+
+      usuarios/SIRCA-XXX/correo
+    */
+
+    const q =
+      query(
+        usuariosRef,
+        where(
+          "correo",
+          "==",
+          correo
+        ),
+        limit(1)
+      );
+
+
+    const snapshot =
+      await getDocs(q);
+
+
+    if (
+      snapshot.empty
+    ) {
+
+      mostrarErrorLogin(
+        "Tu cuenta existe en Firebase, pero no está vinculada a un usuario SIRCA."
+      );
+
+      await signOut(auth);
+
+      return;
 
     }
 
 
-    usuarioActual =
-      null;
-
-    usuarioPerfil =
-      null;
+    const docSnap =
+      snapshot.docs[0];
 
 
-    await signOut(
-      auth
+    usuarioLogueado =
+      {
+
+        id:
+          docSnap.id,
+
+        ...docSnap.data()
+
+      };
+
+
+    cargarPerfilUsuario();
+
+
+    escucharPerfilUsuario(
+      usuarioLogueado.id
     );
 
 
-  }catch(error){
+    escucharHistorialUsuario(
+      usuarioLogueado.id
+    );
+
+
+  } catch (error) {
 
     console.error(error);
+
+    mostrarErrorLogin(
+      "No se pudo cargar tu perfil: " +
+      error.message
+    );
+
+    await signOut(auth);
 
   }
 
 }
 
 
-
 /* =====================================================
-   WINDOW
+   PERFIL USUARIO
 ===================================================== */
 
-window.cambiarTipoLogin =
-  cambiarTipoLogin;
+function cargarPerfilUsuario() {
 
-window.loginUsuario =
-  loginUsuario;
+  const usuario =
+    usuarioLogueado;
 
-window.loginAdministrador =
-  loginAdministrador;
 
-window.cerrarSesion =
-  cerrarSesion;
+  if (!usuario)
+    return;
 
-window.abrirScanner =
-  abrirScanner;
 
-window.cerrarScanner =
-  cerrarScanner;
+  document
+    .getElementById(
+      "perfilNombre"
+    )
+    .textContent =
+      usuario.nombre ||
+      "Usuario";
 
-window.nuevoUsuarioManual =
-  nuevoUsuarioManual;
 
-window.abrirRegistroQR =
-  abrirRegistroQR;
+  document
+    .getElementById(
+      "perfilID"
+    )
+    .textContent =
+      usuario.id ||
+      "-";
 
-window.cerrarModalRegistro =
-  cerrarModalRegistro;
 
-window.registrarNuevoUsuario =
-  registrarNuevoUsuario;
+  document
+    .getElementById(
+      "perfilNombreCompleto"
+    )
+    .textContent =
+      usuario.nombre ||
+      "-";
 
-window.seleccionarUsuario =
-  seleccionarUsuario;
 
-window.registrarEntradaManual =
-  registrarEntradaManual;
+  document
+    .getElementById(
+      "perfilEscuela"
+    )
+    .textContent =
+      usuario.escuela ||
+      "-";
 
-window.registrarSalidaManual =
-  registrarSalidaManual;
 
-window.guardarUsuario =
-  guardarUsuario;
+  document
+    .getElementById(
+      "perfilArea"
+    )
+    .textContent =
+      usuario.area ||
+      "-";
 
-window.mostrarUsuarios =
-  mostrarUsuarios;
 
-window.mostrarHistorial =
-  mostrarHistorial;
+  document
+    .getElementById(
+      "perfilTIA"
+    )
+    .textContent =
+      usuario.TIA ||
+      "-";
 
-window.verHistorialUsuario =
-  verHistorialUsuario;
 
-window.descargarQR =
-  descargarQR;
+  document
+    .getElementById(
+      "perfilCorreo"
+    )
+    .textContent =
+      usuario.correo ||
+      "-";
 
-window.exportarCSV =
-  exportarCSV;
 
-window.limpiarHistorial =
-  limpiarHistorial;
+  document
+    .getElementById(
+      "perfilIDQR"
+    )
+    .textContent =
+      usuario.id ||
+      "-";
+
+
+  actualizarPerfilUsuario(
+    usuario
+  );
+
+}
+
+
+function actualizarPerfilUsuario(
+  usuario
+) {
+
+  if (!usuario)
+    return;
+
+
+  document
+    .getElementById(
+      "perfilNombre"
+    )
+    .textContent =
+      usuario.nombre ||
+      "Usuario";
+
+
+  document
+    .getElementById(
+      "perfilNombreCompleto"
+    )
+    .textContent =
+      usuario.nombre ||
+      "-";
+
+
+  document
+    .getElementById(
+      "perfilEscuela"
+    )
+    .textContent =
+      usuario.escuela ||
+      "-";
+
+
+  document
+    .getElementById(
+      "perfilArea"
+    )
+    .textContent =
+      usuario.area ||
+      "-";
+
+
+  document
+    .getElementById(
+      "perfilTIA"
+    )
+    .textContent =
+      usuario.TIA ||
+      "-";
+
+
+  document
+    .getElementById(
+      "perfilCorreo"
+    )
+    .textContent =
+      usuario.correo ||
+      "-";
+
+
+  document
+    .getElementById(
+      "perfilIDQR"
+    )
+    .textContent =
+      usuario.id ||
+      "-";
+
+
+  const estado =
+    document.getElementById(
+      "perfilEstado"
+    );
+
+
+  if (usuario.dentro) {
+
+    estado.textContent =
+      "● Dentro";
+
+    estado.className =
+      "status status-dentro";
+
+  } else {
+
+    estado.textContent =
+      "● Fuera";
+
+    estado.className =
+      "status status-fuera";
+
+  }
+
+
+  const solicitadas =
+    Number(
+      usuario.horasSolicitadas ||
+      0
+    );
+
+
+  const acumuladas =
+    Number(
+      usuario.horasAcumuladas ||
+      0
+    );
+
+
+  const faltantes =
+    Math.max(
+      0,
+      solicitadas -
+      acumuladas
+    );
+
+
+  document
+    .getElementById(
+      "misHorasSolicitadas"
+    )
+    .textContent =
+      formatoHoras(
+        solicitadas
+      );
+
+
+  document
+    .getElementById(
+      "misHorasAcumuladas"
+    )
+    .textContent =
+      formatoHoras(
+        acumuladas
+      );
+
+
+  document
+    .getElementById(
+      "misHorasFaltantes"
+    )
+    .textContent =
+      formatoHoras(
+        faltantes
+      );
+
+
+  const fechaIngreso =
+    usuario.fechaIngreso ||
+    "-";
+
+
+  const fechaEgreso =
+    usuario.fechaEgreso ||
+    "-";
+
+
+  document
+    .getElementById(
+      "perfilPeriodo"
+    )
+    .textContent =
+      fechaIngreso +
+      " → " +
+      fechaEgreso;
+
+
+  const inicial =
+    (
+      usuario.nombre ||
+      "U"
+    )
+    .trim()
+    .charAt(0)
+    .toUpperCase();
+
+
+  document
+    .getElementById(
+      "perfilAvatar"
+    )
+    .textContent =
+      inicial;
+
+}
+
+
+/* =====================================================
+   ESCUCHAR PERFIL USUARIO
+===================================================== */
+
+function escucharPerfilUsuario(
+  id
+) {
+
+  if (
+    unsubscribeUsuario
+  )
+    unsubscribeUsuario();
+
+
+  const ref =
+    doc(
+      db,
+      "usuarios",
+      id
+    );
+
+
+  unsubscribeUsuario =
+    onSnapshot(
+      ref,
+      snapshot => {
+
+        if (
+          !snapshot.exists()
+        ) {
+
+          mostrarMensaje(
+            "Tu perfil ya no está disponible.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        usuarioLogueado =
+          {
+
+            id:
+              snapshot.id,
+
+            ...snapshot.data()
+
+          };
+
+
+        actualizarPerfilUsuario(
+          usuarioLogueado
+        );
+
+      },
+      error => {
+
+        console.error(error);
+
+        mostrarMensaje(
+          "No se pudo actualizar tu perfil.",
+          "error"
+        );
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   HISTORIAL DEL USUARIO
+===================================================== */
+
+function escucharHistorialUsuario(
+  id
+) {
+
+  if (
+    unsubscribeHistorialUsuario
+  )
+    unsubscribeHistorialUsuario();
+
+
+  const ref =
+    collection(
+      db,
+      "asistencias"
+    );
+
+
+  const q =
+    query(
+      ref,
+      where(
+        "usuarioId",
+        "==",
+        id
+      ),
+      orderBy(
+        "fechaHoraCreacion",
+        "desc"
+      ),
+      limit(500)
+    );
+
+
+  unsubscribeHistorialUsuario =
+    onSnapshot(
+      q,
+      snapshot => {
+
+        asistenciasUsuario =
+          [];
+
+
+        snapshot.forEach(
+          docSnap => {
+
+            asistenciasUsuario.push({
+
+              id:
+                docSnap.id,
+
+              ...docSnap.data()
+
+            });
+
+          }
+        );
+
+
+        mostrarHistorialUsuario();
+
+      },
+      error => {
+
+        console.error(error);
+
+        mostrarMensaje(
+          "No se pudo cargar tu historial: " +
+          error.message,
+          "error"
+        );
+
+      }
+    );
+
+}
+
+
+function mostrarHistorialUsuario() {
+
+  const tbody =
+    document.getElementById(
+      "miTablaHistorial"
+    );
+
+
+  if (
+    asistenciasUsuario.length === 0
+  ) {
+
+    tbody.innerHTML = `
+
+      <tr>
+
+        <td
+          colspan="4"
+          class="empty">
+
+          Todavía no tienes registros de asistencia.
+
+        </td>
+
+      </tr>
+
+    `;
+
+    return;
+
+  }
+
+
+  tbody.innerHTML =
+    "";
+
+
+  asistenciasUsuario.forEach(
+    asistencia => {
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHTML(
+            asistencia.fecha ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${escapeHTML(
+            asistencia.entrada ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${escapeHTML(
+            asistencia.salida ||
+            "-"
+          )}
+        </td>
+
+        <td>
+          ${formatoHoras(
+            asistencia.horas
+          )}
+        </td>
+
+      `;
+
+
+      tbody.appendChild(
+        tr
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ENTER PARA LOGIN
+===================================================== */
+
+document
+  .getElementById(
+    "loginPassword"
+  )
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key ===
+        "Enter"
+      ) {
+
+        iniciarSesion();
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   INICIO
+===================================================== */
+
+document
+  .getElementById(
+    "firebaseStatus"
+  )
+  .textContent =
+    "● Firebase conectado";
 
 </script>
 
