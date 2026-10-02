@@ -39,125 +39,81 @@
     ===================================================== */
 
     .login-screen {
-
       position: fixed;
       inset: 0;
-
       background:
         linear-gradient(
           135deg,
           #0d3d63,
           #155b91
         );
-
       display: flex;
-
       align-items: center;
       justify-content: center;
-
       padding: 20px;
-
       z-index: 99999;
     }
 
     .login-card {
-
       width: 100%;
       max-width: 420px;
-
       background: white;
-
       border-radius: 18px;
-
       padding: 35px;
-
       box-shadow:
         0 20px 50px rgba(0,0,0,.25);
     }
 
     .login-logo {
-
       width: 80px;
       height: 80px;
-
       margin: 0 auto 20px;
-
       border-radius: 18px;
-
       background: #0d3d63;
-
       color: white;
-
       display: flex;
-
       align-items: center;
       justify-content: center;
-
       font-size: 23px;
-
       font-weight: bold;
     }
 
     .login-card h2 {
-
       text-align: center;
-
       margin: 0;
-
       color: #0d3d63;
     }
 
     .login-subtitle {
-
       text-align: center;
-
       color: #64748b;
-
       font-size: 13px;
-
-      margin:
-        8px
-        0
-        25px;
+      margin: 8px 0 25px;
     }
 
     .login-button {
-
       width: 100%;
-
       padding: 13px;
-
       font-size: 15px;
     }
 
     .login-message {
-
       display: none;
-
       padding: 10px;
-
       border-radius: 8px;
-
       margin-bottom: 15px;
-
       font-size: 13px;
     }
 
     .login-message.error {
-
       display: block;
-
       background: #fee2e2;
-
       color: #991b1b;
     }
 
     .login-message.success {
-
       display: block;
-
       background: #dcfce7;
-
       color: #166534;
     }
 
@@ -166,113 +122,69 @@
     ===================================================== */
 
     header {
-
       background:
         linear-gradient(
           135deg,
           #0d3d63,
           #155b91
         );
-
       color: white;
-
       padding: 22px 30px;
-
       box-shadow:
         0 3px 10px rgba(0,0,0,.15);
     }
 
     header .header-content {
-
       max-width: 1200px;
-
       margin: auto;
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       gap: 20px;
     }
 
     header h1 {
-
       margin: 0;
-
       font-size: 30px;
     }
 
     header p {
-
-      margin:
-        5px
-        0
-        0;
-
+      margin: 5px 0 0;
       opacity: .9;
     }
 
     .header-right {
-
       display: flex;
-
       align-items: center;
-
       gap: 10px;
-
       flex-wrap: wrap;
-
       justify-content: flex-end;
     }
 
     .firebase-status {
-
       background:
         rgba(255,255,255,.15);
-
-      padding:
-        9px
-        14px;
-
+      padding: 9px 14px;
       border-radius: 20px;
-
       font-size: 13px;
-
       white-space: nowrap;
     }
 
     .user-role {
-
       background:
         rgba(255,255,255,.15);
-
-      padding:
-        9px
-        14px;
-
+      padding: 9px 14px;
       border-radius: 20px;
-
       font-size: 13px;
     }
 
     .logout-button {
-
       background: #dc3545;
-
       color: white;
-
       border: none;
-
       border-radius: 8px;
-
-      padding:
-        9px
-        14px;
-
+      padding: 9px 14px;
       cursor: pointer;
-
       font-weight: bold;
     }
 
@@ -281,16 +193,9 @@
     ===================================================== */
 
     .container {
-
       max-width: 1200px;
-
-      margin:
-        25px
-        auto;
-
-      padding:
-        0
-        15px;
+      margin: 25px auto;
+      padding: 0 15px;
     }
 
     /* =====================================================
@@ -298,50 +203,30 @@
     ===================================================== */
 
     .stats {
-
       display: grid;
-
       grid-template-columns:
-        repeat(
-          2,
-          1fr
-        );
-
+        repeat(2, 1fr);
       gap: 18px;
-
       margin-bottom: 20px;
     }
 
     .stat-card {
-
       background: white;
-
       border-radius: 14px;
-
       padding: 20px;
-
       box-shadow:
         0 3px 12px rgba(0,0,0,.07);
     }
 
     .stat-card h3 {
-
-      margin:
-        0
-        0
-        8px;
-
+      margin: 0 0 8px;
       color: #64748b;
-
       font-size: 14px;
     }
 
     .stat-card .number {
-
       font-size: 32px;
-
       font-weight: bold;
-
       color: #0d3d63;
     }
 
@@ -350,38 +235,25 @@
     ===================================================== */
 
     .card {
-
       background: white;
-
       border-radius: 14px;
-
       padding: 22px;
-
       margin-bottom: 20px;
-
       box-shadow:
         0 3px 12px rgba(0,0,0,.07);
     }
 
     .card-header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       gap: 10px;
-
       margin-bottom: 18px;
     }
 
     .card-header h2 {
-
       margin: 0;
-
       color: #0d3d63;
-
       font-size: 21px;
     }
 
@@ -390,71 +262,47 @@
     ===================================================== */
 
     button {
-
       border: none;
-
       border-radius: 8px;
-
-      padding:
-        10px
-        15px;
-
+      padding: 10px 15px;
       cursor: pointer;
-
       font-weight: bold;
-
       transition: .2s;
     }
 
     button:hover {
-
-      transform:
-        translateY(-1px);
-
+      transform: translateY(-1px);
       opacity: .92;
     }
 
     .btn-primary {
-
       background: #155b91;
-
       color: white;
     }
 
     .btn-success {
-
       background: #198754;
-
       color: white;
     }
 
     .btn-danger {
-
       background: #dc3545;
-
       color: white;
     }
 
     .btn-secondary {
-
       background: #e2e8f0;
-
       color: #334155;
     }
 
     .btn-warning {
-
       background: #f59e0b;
-
       color: white;
     }
 
     .control-buttons {
-
       display: flex;
-
       flex-wrap: wrap;
-
       gap: 10px;
     }
 
@@ -463,24 +311,17 @@
     ===================================================== */
 
     .user-info {
-
       display: grid;
-
       grid-template-columns:
         1fr
         1fr;
-
       gap: 15px;
     }
 
     .info-box {
-
       background: #f8fafc;
-
       border-radius: 10px;
-
       padding: 14px;
-
       border:
         1px
         solid
@@ -488,16 +329,12 @@
     }
 
     .info-box small {
-
       display: block;
-
       color: #64748b;
-
       margin-bottom: 5px;
     }
 
     .info-box strong {
-
       color: #0f172a;
     }
 
@@ -506,31 +343,20 @@
     ===================================================== */
 
     .status {
-
       display: inline-block;
-
-      padding:
-        6px
-        12px;
-
+      padding: 6px 12px;
       border-radius: 20px;
-
       font-size: 13px;
-
       font-weight: bold;
     }
 
     .status-dentro {
-
       background: #dcfce7;
-
       color: #166534;
     }
 
     .status-fuera {
-
       background: #fee2e2;
-
       color: #991b1b;
     }
 
@@ -539,28 +365,17 @@
     ===================================================== */
 
     .hours-summary {
-
       display: grid;
-
       grid-template-columns:
-        repeat(
-          3,
-          1fr
-        );
-
+        repeat(3, 1fr);
       gap: 15px;
     }
 
     .hours-box {
-
       background: #f8fafc;
-
       padding: 18px;
-
       border-radius: 10px;
-
       text-align: center;
-
       border:
         1px
         solid
@@ -568,21 +383,13 @@
     }
 
     .hours-box h3 {
-
-      margin:
-        0
-        0
-        8px;
-
+      margin: 0 0 8px;
       font-size: 14px;
-
       color: #64748b;
     }
 
     .hours-box strong {
-
       font-size: 25px;
-
       color: #0d3d63;
     }
 
@@ -591,9 +398,7 @@
     ===================================================== */
 
     .users-grid {
-
       display: grid;
-
       grid-template-columns:
         repeat(
           auto-fill,
@@ -602,107 +407,67 @@
             1fr
           )
         );
-
       gap: 15px;
     }
 
     .user-card {
-
       border:
         1px
         solid
         #e2e8f0;
-
       border-radius: 12px;
-
       padding: 16px;
-
       background: white;
-
       cursor: pointer;
-
       transition: .2s;
     }
 
     .user-card:hover {
-
-      transform:
-        translateY(-2px);
-
+      transform: translateY(-2px);
       box-shadow:
-        0
-        5px
-        15px
-        rgba(0,0,0,.08);
+        0 5px 15px rgba(0,0,0,.08);
     }
 
     .user-top {
-
       display: flex;
-
       align-items: center;
-
       gap: 12px;
-
       margin-bottom: 12px;
     }
 
     .user-color {
-
       width: 42px;
-
       height: 42px;
-
       border-radius: 50%;
-
       flex-shrink: 0;
     }
 
     .user-card h3 {
-
       margin: 0;
-
       font-size: 16px;
     }
 
     .user-card p {
-
-      margin:
-        3px
-        0;
-
+      margin: 3px 0;
       font-size: 13px;
-
       color: #64748b;
     }
 
     .qr-mini {
-
       display: flex;
-
       justify-content: center;
-
-      margin:
-        12px
-        0;
+      margin: 12px 0;
     }
 
     .user-actions {
-
       display: flex;
-
       gap: 7px;
-
       flex-wrap: wrap;
     }
 
     .user-actions button {
-
       font-size: 12px;
-
-      padding:
-        7px
-        9px;
+      padding: 7px 9px;
     }
 
     /* =====================================================
@@ -710,38 +475,28 @@
     ===================================================== */
 
     .table-container {
-
       overflow-x: auto;
     }
 
     table {
-
       width: 100%;
-
       border-collapse: collapse;
-
       min-width: 700px;
     }
 
     th,
     td {
-
       padding: 11px;
-
       border-bottom:
         1px
         solid
         #e2e8f0;
-
       text-align: left;
-
       font-size: 13px;
     }
 
     th {
-
       background: #f8fafc;
-
       color: #475569;
     }
 
@@ -750,78 +505,49 @@
     ===================================================== */
 
     .modal {
-
       display: none;
-
       position: fixed;
-
       z-index: 1000;
-
       inset: 0;
-
       background:
         rgba(0,0,0,.55);
-
       align-items: center;
-
       justify-content: center;
-
       padding: 20px;
     }
 
     .modal.active {
-
       display: flex;
     }
 
     .modal-content {
-
       background: white;
-
       width: 100%;
-
       max-width: 550px;
-
       max-height: 90vh;
-
       overflow-y: auto;
-
       border-radius: 15px;
-
       padding: 25px;
-
       position: relative;
     }
 
     .modal-header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       margin-bottom: 20px;
     }
 
     .modal-header h2 {
-
       margin: 0;
-
       color: #0d3d63;
     }
 
     .close {
-
       background: transparent;
-
       font-size: 25px;
-
       color: #64748b;
-
-      padding:
-        0
-        5px;
+      padding: 0 5px;
     }
 
     /* =====================================================
@@ -829,256 +555,670 @@
     ===================================================== */
 
     .form-group {
-
       margin-bottom: 15px;
     }
 
     .form-group label {
-
       display: block;
-
       font-size: 13px;
-
       font-weight: bold;
-
       color: #475569;
-
       margin-bottom: 6px;
     }
 
     .form-group input,
     .form-group select {
-
       width: 100%;
-
       padding: 11px;
-
       border:
         1px
         solid
         #cbd5e1;
-
       border-radius: 8px;
-
       outline: none;
     }
 
     .form-group input:focus,
     .form-group select:focus {
-
       border-color: #155b91;
     }
 
     .form-row {
-
       display: grid;
-
       grid-template-columns:
         1fr
         1fr;
-
       gap: 12px;
     }
 
     .modal-actions {
-
       display: flex;
-
       justify-content: flex-end;
-
       gap: 10px;
-
       margin-top: 20px;
     }
 
     #reader {
-
       width: 100%;
     }
 
     .qr-registration {
-
       text-align: center;
-
       background: #f8fafc;
-
       border-radius: 10px;
-
       padding: 15px;
-
       margin-bottom: 20px;
     }
 
     .qr-registration strong {
-
       font-size: 20px;
-
       color: #0d3d63;
     }
 
     .preview {
-
       max-width: 150px;
-
       max-height: 150px;
-
       display: block;
-
-      margin:
-        10px
-        auto;
-
+      margin: 10px auto;
       border-radius: 8px;
     }
 
     .hidden {
-
       display: none !important;
     }
 
     .search-box {
-
       margin-bottom: 15px;
     }
 
     .search-box input {
-
       width: 100%;
-
       padding: 12px;
-
       border:
         1px
         solid
         #cbd5e1;
-
       border-radius: 8px;
     }
 
     .empty {
-
       text-align: center;
-
       color: #64748b;
-
       padding: 30px;
     }
 
     .message {
-
       padding: 12px;
-
       border-radius: 8px;
-
       margin-bottom: 15px;
-
       font-size: 14px;
-
       display: none;
     }
 
     .message.success {
-
       background: #dcfce7;
-
       color: #166534;
     }
 
     .message.error {
-
       background: #fee2e2;
-
       color: #991b1b;
     }
 
     /* =====================================================
-       PERFIL USUARIO
+       PERFIL USUARIO - ESTILO ORIGINAL
     ===================================================== */
 
     .perfil-header {
-
       display: flex;
-
       align-items: center;
-
       gap: 15px;
-
       margin-bottom: 20px;
     }
 
     .perfil-avatar {
-
       width: 65px;
-
       height: 65px;
-
       border-radius: 50%;
-
       background: #155b91;
-
       color: white;
-
       display: flex;
-
       align-items: center;
-
       justify-content: center;
-
       font-size: 24px;
-
       font-weight: bold;
     }
 
     .perfil-header h2 {
-
       margin: 0;
-
       color: #0d3d63;
     }
 
     .perfil-header p {
-
-      margin:
-        4px
-        0
-        0;
-
+      margin: 4px 0 0;
       color: #64748b;
     }
 
     /* =====================================================
-       RESPONSIVE
+       NUEVO DISEÑO DEL PANEL DE USUARIO
+       SOLO PRESENTACIÓN
+    ===================================================== */
+
+    #panelUsuario {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    #panelUsuario .card {
+      border: 1px solid #e5eaf0;
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow:
+        0 8px 30px rgba(15, 61, 99, .06);
+      transition: .2s ease;
+    }
+
+    #panelUsuario .card:hover {
+      box-shadow:
+        0 12px 35px rgba(15, 61, 99, .09);
+    }
+
+    /* =====================================================
+       CABECERA DEL PERFIL
+    ===================================================== */
+
+    #panelUsuario .perfil-card {
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      background: #ffffff;
+    }
+
+    #panelUsuario .perfil-banner {
+      height: 135px;
+      background:
+        linear-gradient(
+          135deg,
+          #092f4f 0%,
+          #0d3d63 45%,
+          #1b679e 100%
+        );
+      position: relative;
+    }
+
+    #panelUsuario .perfil-banner::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -100px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      border: 35px solid rgba(255,255,255,.06);
+    }
+
+    #panelUsuario .perfil-banner::before {
+      content: "";
+      position: absolute;
+      right: 110px;
+      bottom: -100px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      border: 28px solid rgba(255,255,255,.05);
+    }
+
+    #panelUsuario .perfil-main {
+      padding:
+        0
+        30px
+        28px;
+    }
+
+    #panelUsuario .perfil-header {
+      margin-top: -48px;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 2;
+      align-items: flex-end;
+    }
+
+    #panelUsuario .perfil-avatar {
+      width: 96px;
+      height: 96px;
+      min-width: 96px;
+      border-radius: 24px;
+      background:
+        linear-gradient(
+          145deg,
+          #ffffff,
+          #eef4f8
+        );
+      color: #0d3d63;
+      border: 5px solid #ffffff;
+      box-shadow:
+        0 8px 20px rgba(0,0,0,.18);
+      font-size: 34px;
+    }
+
+    #panelUsuario .perfil-header h2 {
+      font-size: 27px;
+      color: #102f48;
+      letter-spacing: -.3px;
+    }
+
+    #panelUsuario .perfil-header p {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    #panelUsuario .perfil-header-info {
+      padding-bottom: 4px;
+    }
+
+    /* =====================================================
+       INFORMACIÓN PERSONAL
+    ===================================================== */
+
+    #panelUsuario .perfil-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 17px;
+      color: #0d3d63;
+      font-size: 17px;
+    }
+
+    #panelUsuario .perfil-section-title::before {
+      content: "";
+      width: 4px;
+      height: 20px;
+      border-radius: 5px;
+      background: #155b91;
+    }
+
+    #panelUsuario .user-info {
+      grid-template-columns:
+        repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    #panelUsuario .info-box {
+      min-height: 72px;
+      padding: 15px 17px;
+      border-radius: 13px;
+      background:
+        linear-gradient(
+          145deg,
+          #f9fbfc,
+          #f5f8fa
+        );
+      border: 1px solid #e7edf2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: .2s ease;
+    }
+
+    #panelUsuario .info-box:hover {
+      border-color: #cbdbe7;
+      transform: translateY(-1px);
+    }
+
+    #panelUsuario .info-box small {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .55px;
+      font-weight: bold;
+      color: #7a8b9b;
+      margin-bottom: 6px;
+    }
+
+    #panelUsuario .info-box strong {
+      font-size: 14px;
+      color: #172b3d;
+      word-break: break-word;
+    }
+
+    #panelUsuario #perfilIDQR {
+      font-family: monospace;
+      letter-spacing: .5px;
+    }
+
+    /* =====================================================
+       ESTADO DEL USUARIO
+    ===================================================== */
+
+    #panelUsuario #perfilEstado {
+      width: fit-content;
+      padding: 7px 13px;
+      font-size: 12px;
+      letter-spacing: .2px;
+    }
+
+    #panelUsuario .status-dentro {
+      background: #e5f8ed;
+      color: #13733d;
+      border: 1px solid #b9e8ca;
+    }
+
+    #panelUsuario .status-fuera {
+      background: #fff0f0;
+      color: #b42318;
+      border: 1px solid #f3c5c2;
+    }
+
+    /* =====================================================
+       TARJETA DE HORAS
+    ===================================================== */
+
+    #panelUsuario .hours-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #panelUsuario .hours-card::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(21,91,145,.035);
+      right: -80px;
+      top: -80px;
+    }
+
+    #panelUsuario .hours-card .card-header {
+      margin-bottom: 20px;
+    }
+
+    #panelUsuario .hours-card .card-header h2 {
+      font-size: 19px;
+    }
+
+    #panelUsuario .hours-summary {
+      grid-template-columns:
+        repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    #panelUsuario .hours-box {
+      position: relative;
+      padding: 21px 15px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 15px;
+      background: #f8fafc;
+      border: 1px solid #e6edf2;
+      overflow: hidden;
+    }
+
+    #panelUsuario .hours-box::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: #155b91;
+    }
+
+    #panelUsuario .hours-box:nth-child(2)::before {
+      background: #198754;
+    }
+
+    #panelUsuario .hours-box:nth-child(3)::before {
+      background: #f59e0b;
+    }
+
+    #panelUsuario .hours-box h3 {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin: 0 0 8px;
+      color: #718096;
+    }
+
+    #panelUsuario .hours-box strong {
+      font-size: 29px;
+      color: #0d3d63;
+      line-height: 1;
+    }
+
+    #panelUsuario .hours-box:nth-child(2) strong {
+      color: #198754;
+    }
+
+    #panelUsuario .hours-box:nth-child(3) strong {
+      color: #d97706;
+    }
+
+    /* =====================================================
+       HISTORIAL
+    ===================================================== */
+
+    #panelUsuario .history-card {
+      overflow: hidden;
+    }
+
+    #panelUsuario .history-card .card-header {
+      margin-bottom: 20px;
+    }
+
+    #panelUsuario .history-title {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    #panelUsuario .history-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: #eaf3f9;
+      color: #155b91;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    #panelUsuario .history-card .table-container {
+      border:
+        1px
+        solid
+        #e6ebf0;
+      border-radius: 13px;
+      overflow-x: auto;
+    }
+
+    #panelUsuario .history-card table {
+      min-width: 600px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    #panelUsuario .history-card th {
+      background: #f6f9fb;
+      padding: 14px 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #68798a;
+      border-bottom: 1px solid #e2e8ee;
+    }
+
+    #panelUsuario .history-card td {
+      padding: 15px 16px;
+      font-size: 13px;
+      color: #334155;
+      border-bottom: 1px solid #edf1f4;
+    }
+
+    #panelUsuario .history-card tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    #panelUsuario .history-card tbody tr {
+      transition: .15s ease;
+    }
+
+    #panelUsuario .history-card tbody tr:hover {
+      background: #f8fbfd;
+    }
+
+    #panelUsuario .history-card .empty {
+      padding: 35px 20px;
+      color: #7a8795;
+    }
+
+    /* =====================================================
+       ETIQUETA DEL PERIODO
+    ===================================================== */
+
+    #panelUsuario #perfilPeriodo {
+      color: #155b91;
+      font-weight: bold;
+    }
+
+    /* =====================================================
+       RESPONSIVE USUARIO
     ===================================================== */
 
     @media (max-width: 700px) {
 
       .stats {
-
         grid-template-columns: 1fr;
       }
 
       .user-info,
       .form-row,
       .hours-summary {
-
         grid-template-columns: 1fr;
       }
 
       header .header-content {
-
         flex-direction: column;
-
         align-items: flex-start;
       }
 
       .header-right {
-
         justify-content: flex-start;
       }
 
       .login-card {
-
         padding: 25px;
+      }
+
+      /* PANEL USUARIO MÓVIL */
+
+      #panelUsuario {
+        width: 100%;
+      }
+
+      #panelUsuario .card {
+        padding: 18px;
+        border-radius: 17px;
+        margin-bottom: 15px;
+      }
+
+      #panelUsuario .perfil-card {
+        padding: 0;
+      }
+
+      #panelUsuario .perfil-banner {
+        height: 105px;
+      }
+
+      #panelUsuario .perfil-main {
+        padding:
+          0
+          18px
+          20px;
+      }
+
+      #panelUsuario .perfil-header {
+        margin-top: -42px;
+        gap: 12px;
+        align-items: flex-end;
+      }
+
+      #panelUsuario .perfil-avatar {
+        width: 82px;
+        height: 82px;
+        min-width: 82px;
+        border-radius: 20px;
+        font-size: 29px;
+      }
+
+      #panelUsuario .perfil-header h2 {
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      #panelUsuario .perfil-header p {
+        font-size: 12px;
+      }
+
+      #panelUsuario .user-info {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      #panelUsuario .info-box {
+        min-height: 65px;
+      }
+
+      #panelUsuario .hours-summary {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      #panelUsuario .hours-box {
+        min-height: 95px;
+      }
+
+      #panelUsuario .history-card .card-header {
+        align-items: flex-start;
+      }
+
+      #panelUsuario .history-card th,
+      #panelUsuario .history-card td {
+        padding:
+          12px
+          13px;
+      }
+
+    }
+
+    @media (max-width: 430px) {
+
+      #panelUsuario .perfil-header {
+        align-items: center;
+      }
+
+      #panelUsuario .perfil-avatar {
+        width: 70px;
+        height: 70px;
+        min-width: 70px;
+        border-radius: 17px;
+        font-size: 25px;
+      }
+
+      #panelUsuario .perfil-header h2 {
+        font-size: 18px;
+      }
+
+      #panelUsuario .perfil-header p {
+        font-size: 11px;
+      }
+
+      #panelUsuario .hours-box strong {
+        font-size: 27px;
       }
 
     }
@@ -1227,8 +1367,6 @@
   <div id="panelAdministrador" class="hidden">
 
 
-    <!-- ESTADÍSTICAS -->
-
     <div class="stats">
 
       <div class="stat-card">
@@ -1266,8 +1404,6 @@
 
     </div>
 
-
-    <!-- CONTROL DE ASISTENCIA -->
 
     <div class="card">
 
@@ -1324,8 +1460,6 @@
 
     </div>
 
-
-    <!-- USUARIO SELECCIONADO -->
 
     <div class="card">
 
@@ -1483,8 +1617,6 @@
     </div>
 
 
-    <!-- HORAS -->
-
     <div class="card">
 
       <div class="card-header">
@@ -1543,8 +1675,6 @@
     </div>
 
 
-    <!-- USUARIOS -->
-
     <div class="card">
 
       <div class="card-header">
@@ -1575,8 +1705,6 @@
 
     </div>
 
-
-    <!-- HISTORIAL -->
 
     <div
       class="card"
@@ -1672,7 +1800,7 @@
 
 
   <!-- ===================================================
-       PANEL USUARIO
+       PANEL USUARIO - NUEVO DISEÑO
   =================================================== -->
 
   <div
@@ -1682,144 +1810,155 @@
 
     <!-- PERFIL -->
 
-    <div class="card">
+    <div class="card perfil-card">
 
-      <div class="perfil-header">
+      <div class="perfil-banner"></div>
 
-        <div
-          class="perfil-avatar"
-          id="perfilAvatar">
+      <div class="perfil-main">
 
-          U
+        <div class="perfil-header">
 
-        </div>
+          <div
+            class="perfil-avatar"
+            id="perfilAvatar">
 
+            U
 
-        <div>
-
-          <h2 id="perfilNombre">
-            Usuario
-          </h2>
-
-          <p id="perfilID">
-            SIRCA-000
-          </p>
-
-        </div>
-
-      </div>
+          </div>
 
 
-      <div class="user-info">
+          <div class="perfil-header-info">
 
+            <h2 id="perfilNombre">
+              Usuario
+            </h2>
 
-        <div class="info-box">
+            <p id="perfilID">
+              SIRCA-000
+            </p>
 
-          <small>
-            Nombre completo
-          </small>
-
-          <strong id="perfilNombreCompleto">
-            -
-          </strong>
+          </div>
 
         </div>
 
 
-        <div class="info-box">
+        <h3 class="perfil-section-title">
+          Información del usuario
+        </h3>
 
-          <small>
-            Escuela / Universidad
-          </small>
 
-          <strong id="perfilEscuela">
-            -
-          </strong>
+        <div class="user-info">
+
+
+          <div class="info-box">
+
+            <small>
+              Nombre completo
+            </small>
+
+            <strong id="perfilNombreCompleto">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Escuela / Universidad
+            </small>
+
+            <strong id="perfilEscuela">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Área
+            </small>
+
+            <strong id="perfilArea">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Matrícula
+            </small>
+
+            <strong id="perfilTIA">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Correo electrónico
+            </small>
+
+            <strong id="perfilCorreo">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Identificador QR
+            </small>
+
+            <strong id="perfilIDQR">
+              -
+            </strong>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Estado actual
+            </small>
+
+            <span
+              id="perfilEstado"
+              class="status status-fuera">
+
+              ● Fuera
+
+            </span>
+
+          </div>
+
+
+          <div class="info-box">
+
+            <small>
+              Periodo de estadía
+            </small>
+
+            <strong id="perfilPeriodo">
+              -
+            </strong>
+
+          </div>
+
 
         </div>
-
-
-        <div class="info-box">
-
-          <small>
-            Área
-          </small>
-
-          <strong id="perfilArea">
-            -
-          </strong>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <small>
-            Matrícula
-          </small>
-
-          <strong id="perfilTIA">
-            -
-          </strong>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <small>
-            Correo
-          </small>
-
-          <strong id="perfilCorreo">
-            -
-          </strong>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <small>
-            ID QR
-          </small>
-
-          <strong id="perfilIDQR">
-            -
-          </strong>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <small>
-            Estado actual
-          </small>
-
-          <span
-            id="perfilEstado"
-            class="status status-fuera">
-
-            ● Fuera
-
-          </span>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <small>
-            Periodo
-          </small>
-
-          <strong id="perfilPeriodo">
-            -
-          </strong>
-
-        </div>
-
 
       </div>
 
@@ -1828,12 +1967,12 @@
 
     <!-- HORAS DEL USUARIO -->
 
-    <div class="card">
+    <div class="card hours-card">
 
       <div class="card-header">
 
         <h2>
-          Mis horas
+          Resumen de horas
         </h2>
 
       </div>
@@ -1888,13 +2027,21 @@
 
     <!-- MI HISTORIAL -->
 
-    <div class="card">
+    <div class="card history-card">
 
       <div class="card-header">
 
-        <h2>
-          Mi historial de asistencia
-        </h2>
+        <div class="history-title">
+
+          <div class="history-icon">
+            ☷
+          </div>
+
+          <h2>
+            Mi historial de asistencia
+          </h2>
+
+        </div>
 
       </div>
 
@@ -5596,15 +5743,6 @@ async function iniciarUsuario() {
         "usuarios"
       );
 
-
-    /*
-      IMPORTANTE:
-
-      El correo que está en Firebase Authentication
-      debe ser exactamente el mismo que está en:
-
-      usuarios/SIRCA-XXX/correo
-    */
 
     const q =
       query(
