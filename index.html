@@ -666,7 +666,7 @@
     }
 
     /* =====================================================
-       PERFIL USUARIO - ESTILO ORIGINAL
+       PERFIL USUARIO
     ===================================================== */
 
     .perfil-header {
@@ -700,8 +700,7 @@
     }
 
     /* =====================================================
-       NUEVO DISEÑO DEL PANEL DE USUARIO
-       SOLO PRESENTACIÓN
+       NUEVO DISEÑO PANEL USUARIO
     ===================================================== */
 
     #panelUsuario {
@@ -723,10 +722,6 @@
       box-shadow:
         0 12px 35px rgba(15, 61, 99, .09);
     }
-
-    /* =====================================================
-       CABECERA DEL PERFIL
-    ===================================================== */
 
     #panelUsuario .perfil-card {
       position: relative;
@@ -818,10 +813,6 @@
       padding-bottom: 4px;
     }
 
-    /* =====================================================
-       INFORMACIÓN PERSONAL
-    ===================================================== */
-
     #panelUsuario .perfil-section-title {
       display: flex;
       align-items: center;
@@ -887,10 +878,6 @@
       letter-spacing: .5px;
     }
 
-    /* =====================================================
-       ESTADO DEL USUARIO
-    ===================================================== */
-
     #panelUsuario #perfilEstado {
       width: fit-content;
       padding: 7px 13px;
@@ -909,10 +896,6 @@
       color: #b42318;
       border: 1px solid #f3c5c2;
     }
-
-    /* =====================================================
-       TARJETA DE HORAS
-    ===================================================== */
 
     #panelUsuario .hours-card {
       position: relative;
@@ -997,10 +980,6 @@
       color: #d97706;
     }
 
-    /* =====================================================
-       HISTORIAL
-    ===================================================== */
-
     #panelUsuario .history-card {
       overflow: hidden;
     }
@@ -1076,17 +1055,359 @@
       color: #7a8795;
     }
 
-    /* =====================================================
-       ETIQUETA DEL PERIODO
-    ===================================================== */
-
     #panelUsuario #perfilPeriodo {
       color: #155b91;
       font-weight: bold;
     }
 
     /* =====================================================
-       RESPONSIVE USUARIO
+       LECTOR QR - NUEVO
+    ===================================================== */
+
+    #modalScanner {
+      background:
+        rgba(3, 15, 27, .82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    #modalScanner .scanner-modal {
+      width: 100%;
+      max-width: 500px;
+      max-height: 94vh;
+      padding: 0;
+      overflow: hidden;
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow:
+        0 25px 80px rgba(0,0,0,.35);
+      animation: scannerEntrada .25s ease;
+    }
+
+    @keyframes scannerEntrada {
+      from {
+        opacity: 0;
+        transform: scale(.96) translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .scanner-top {
+      padding: 18px 20px;
+      background:
+        linear-gradient(
+          135deg,
+          #092f4f,
+          #155b91
+        );
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .scanner-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scanner-title-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+    }
+
+    .scanner-title h2 {
+      margin: 0;
+      color: white;
+      font-size: 19px;
+    }
+
+    .scanner-title p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      opacity: .75;
+    }
+
+    .scanner-close {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      color: white;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .scanner-body {
+      padding: 18px;
+    }
+
+    .scanner-camera {
+      position: relative;
+      width: 100%;
+      min-height: 330px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #07131f;
+      border: 1px solid #dbe4ea;
+    }
+
+    #reader {
+      width: 100%;
+      min-height: 330px;
+      background: #07131f;
+    }
+
+    #reader video {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 330px;
+      object-fit: cover;
+    }
+
+    #reader__scan_region {
+      background: transparent !important;
+    }
+
+    #reader__scan_region img {
+      display: none !important;
+    }
+
+    #reader__dashboard {
+      display: none !important;
+    }
+
+    .scanner-frame {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 235px;
+      height: 235px;
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(255,255,255,.85);
+      border-radius: 18px;
+      pointer-events: none;
+      box-shadow:
+        0 0 0 999px rgba(0,0,0,.25);
+    }
+
+    .scanner-frame::before,
+    .scanner-frame::after {
+      content: "";
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      border-color: #40a9ff;
+      border-style: solid;
+    }
+
+    .scanner-frame::before {
+      left: -3px;
+      top: -3px;
+      border-width: 4px 0 0 4px;
+      border-radius: 10px 0 0 0;
+    }
+
+    .scanner-frame::after {
+      right: -3px;
+      bottom: -3px;
+      border-width: 0 4px 4px 0;
+      border-radius: 0 0 10px 0;
+    }
+
+    .scanner-line {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 15px;
+      height: 2px;
+      background: #38bdf8;
+      box-shadow:
+        0 0 10px rgba(56,189,248,.9);
+      animation: scannerLine 2s infinite ease-in-out;
+    }
+
+    @keyframes scannerLine {
+      0%,100% {
+        top: 15px;
+        opacity: .35;
+      }
+      50% {
+        top: calc(100% - 17px);
+        opacity: 1;
+      }
+    }
+
+    .scanner-status {
+      text-align: center;
+      padding: 12px 8px 5px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .scanner-status.scanning {
+      color: #155b91;
+      font-weight: bold;
+    }
+
+    .scanner-status.success {
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .scanner-status.error {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .scanner-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .scanner-control {
+      min-height: 46px;
+      padding: 8px;
+      border: 1px solid #dbe4ea;
+      background: #f7fafc;
+      color: #334155;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .scanner-control:hover {
+      background: #edf4f8;
+      border-color: #b9cad6;
+    }
+
+    .scanner-control.active {
+      background: #eaf3f9;
+      color: #155b91;
+      border-color: #9fc1d8;
+    }
+
+    .scanner-result {
+      display: none;
+      margin-top: 14px;
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid #dce7ed;
+      background: #f8fbfd;
+    }
+
+    .scanner-result.active {
+      display: block;
+      animation: resultadoEntrada .2s ease;
+    }
+
+    @keyframes resultadoEntrada {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scanner-result-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scanner-result-avatar {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 14px;
+      background:
+        linear-gradient(
+          145deg,
+          #0d3d63,
+          #1b679e
+        );
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 19px;
+    }
+
+    .scanner-result-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .scanner-result-info strong {
+      display: block;
+      color: #172b3d;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .scanner-result-info span {
+      display: block;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .scanner-action {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .scanner-action.entrada {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .scanner-action.salida {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .scanner-action.nuevo {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .scanner-permission {
+      display: none;
+      text-align: center;
+      padding: 18px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .scanner-permission.active {
+      display: block;
+    }
+
+    /* =====================================================
+       RESPONSIVE
     ===================================================== */
 
     @media (max-width: 700px) {
@@ -1113,8 +1434,6 @@
       .login-card {
         padding: 25px;
       }
-
-      /* PANEL USUARIO MÓVIL */
 
       #panelUsuario {
         width: 100%;
@@ -1193,6 +1512,26 @@
           13px;
       }
 
+      .scanner-modal {
+        max-width: 100% !important;
+        border-radius: 20px !important;
+      }
+
+      .scanner-body {
+        padding: 12px;
+      }
+
+      .scanner-camera,
+      #reader,
+      #reader video {
+        min-height: 300px;
+      }
+
+      .scanner-frame {
+        width: 205px;
+        height: 205px;
+      }
+
     }
 
     @media (max-width: 430px) {
@@ -1219,6 +1558,25 @@
 
       #panelUsuario .hours-box strong {
         font-size: 27px;
+      }
+
+      .scanner-camera,
+      #reader,
+      #reader video {
+        min-height: 270px;
+      }
+
+      .scanner-frame {
+        width: 180px;
+        height: 180px;
+      }
+
+      .scanner-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .scanner-control:last-child {
+        grid-column: 1 / -1;
       }
 
     }
@@ -1800,15 +2158,13 @@
 
 
   <!-- ===================================================
-       PANEL USUARIO - NUEVO DISEÑO
+       PANEL USUARIO
   =================================================== -->
 
   <div
     id="panelUsuario"
     class="hidden">
 
-
-    <!-- PERFIL -->
 
     <div class="card perfil-card">
 
@@ -1965,8 +2321,6 @@
     </div>
 
 
-    <!-- HORAS DEL USUARIO -->
-
     <div class="card hours-card">
 
       <div class="card-header">
@@ -2024,8 +2378,6 @@
 
     </div>
 
-
-    <!-- MI HISTORIAL -->
 
     <div class="card history-card">
 
@@ -2101,18 +2453,34 @@
   class="modal"
   id="modalScanner">
 
-  <div class="modal-content">
+  <div class="scanner-modal">
 
 
-    <div class="modal-header">
+    <div class="scanner-top">
 
-      <h2>
-        Escanear código QR
-      </h2>
+      <div class="scanner-title">
+
+        <div class="scanner-title-icon">
+          ▣
+        </div>
+
+        <div>
+
+          <h2>
+            Escanear código QR
+          </h2>
+
+          <p>
+            Acerca el código al recuadro
+          </p>
+
+        </div>
+
+      </div>
 
 
       <button
-        class="close"
+        class="scanner-close"
         onclick="cerrarScanner()">
 
         ×
@@ -2122,8 +2490,116 @@
     </div>
 
 
-    <div id="reader"></div>
+    <div class="scanner-body">
 
+
+      <div class="scanner-camera">
+
+        <div id="reader"></div>
+
+        <div class="scanner-frame">
+
+          <div class="scanner-line"></div>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="scannerStatus"
+        class="scanner-status scanning">
+
+        ● Escaneando...
+
+      </div>
+
+
+      <div
+        id="scannerPermission"
+        class="scanner-permission">
+
+        Permite el acceso a la cámara para
+        utilizar el lector QR.
+
+      </div>
+
+
+      <div class="scanner-controls">
+
+
+        <button
+          id="btnCambiarCamara"
+          class="scanner-control"
+          onclick="cambiarCamara()">
+
+          🔄 Cambiar cámara
+
+        </button>
+
+
+        <button
+          id="btnLinterna"
+          class="scanner-control"
+          onclick="alternarLinterna()">
+
+          🔦 Linterna
+
+        </button>
+
+
+        <button
+          class="scanner-control"
+          onclick="cerrarScanner()">
+
+          ✕ Cerrar lector
+
+        </button>
+
+
+      </div>
+
+
+      <div
+        id="scannerResultado"
+        class="scanner-result">
+
+        <div class="scanner-result-top">
+
+          <div
+            id="scannerAvatar"
+            class="scanner-result-avatar">
+
+            U
+
+          </div>
+
+
+          <div class="scanner-result-info">
+
+            <strong id="scannerNombre">
+              Usuario
+            </strong>
+
+            <span id="scannerID">
+              SIRCA-000
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="scannerAccion"
+          class="scanner-action">
+
+        </div>
+
+      </div>
+
+
+    </div>
 
   </div>
 
@@ -2465,6 +2941,19 @@ let unsubscribeHistorialUsuario = null;
 
 
 /* =====================================================
+   VARIABLES DEL SCANNER
+===================================================== */
+
+let camarasDisponibles = [];
+
+let camaraActualIndex = 0;
+
+let linternaActiva = false;
+
+let procesandoQR = false;
+
+
+/* =====================================================
    COLORES
 ===================================================== */
 
@@ -2706,6 +3195,11 @@ async function cerrarSesion() {
     unsubscribeUsuario = null;
 
     unsubscribeHistorialUsuario = null;
+
+
+    if (scannerActivo) {
+      await cerrarScanner();
+    }
 
 
     usuarios = [];
@@ -3620,44 +4114,225 @@ function actualizarUsuarioSeleccionado() {
 
 
 /* =====================================================
-   SCANNER
+   SONIDO DEL SCANNER
 ===================================================== */
 
-async function abrirScanner() {
+function reproducirSonidoQR() {
 
-  const modal =
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext)
+      return;
+
+    const contexto =
+      new AudioContext();
+
+    const oscilador =
+      contexto.createOscillator();
+
+    const ganancia =
+      contexto.createGain();
+
+    oscilador.type =
+      "sine";
+
+    oscilador.frequency.value =
+      880;
+
+    ganancia.gain.setValueAtTime(
+      0.0001,
+      contexto.currentTime
+    );
+
+    ganancia.gain.exponentialRampToValueAtTime(
+      0.15,
+      contexto.currentTime + .01
+    );
+
+    ganancia.gain.exponentialRampToValueAtTime(
+      0.0001,
+      contexto.currentTime + .18
+    );
+
+    oscilador.connect(
+      ganancia
+    );
+
+    ganancia.connect(
+      contexto.destination
+    );
+
+    oscilador.start();
+
+    oscilador.stop(
+      contexto.currentTime + .2
+    );
+
+    setTimeout(
+      () => {
+        contexto.close();
+      },
+      300
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "No se pudo reproducir sonido:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   VIBRACIÓN
+===================================================== */
+
+function vibrarQR() {
+
+  try {
+
+    if (
+      navigator.vibrate
+    ) {
+
+      navigator.vibrate(
+        [80, 40, 100]
+      );
+
+    }
+
+  } catch (error) {}
+
+}
+
+
+/* =====================================================
+   ESTADO VISUAL SCANNER
+===================================================== */
+
+function establecerEstadoScanner(
+  texto,
+  tipo = "scanning"
+) {
+
+  const estado =
     document.getElementById(
-      "modalScanner"
+      "scannerStatus"
     );
 
 
-  modal
-    .classList
-    .add("active");
+  estado.textContent =
+    texto;
 
 
-  if (scannerActivo)
+  estado.className =
+    "scanner-status " +
+    tipo;
+
+}
+
+
+/* =====================================================
+   OBTENER CAMARAS
+===================================================== */
+
+async function obtenerCamaras() {
+
+  try {
+
+    const dispositivos =
+      await Html5Qrcode.getCameras();
+
+
+    camarasDisponibles =
+      dispositivos || [];
+
+
+    if (
+      camarasDisponibles.length === 0
+    ) {
+
+      document
+        .getElementById(
+          "btnCambiarCamara"
+        )
+        .disabled = true;
+
+      return;
+
+    }
+
+
+    const boton =
+      document.getElementById(
+        "btnCambiarCamara"
+      );
+
+
+    boton.disabled =
+      camarasDisponibles.length < 2;
+
+
+  } catch (error) {
+
+    console.warn(
+      "No se pudieron obtener las cámaras:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   INICIAR CAMARA
+===================================================== */
+
+async function iniciarCamara(
+  cameraId = null
+) {
+
+  if (!scanner)
     return;
 
 
-  scanner =
-    new Html5Qrcode(
-      "reader"
-    );
+  establecerEstadoScanner(
+    "● Iniciando cámara...",
+    "scanning"
+  );
 
 
   try {
 
+    const configuracion =
+      cameraId
+        ? cameraId
+        : {
+            facingMode:
+              "environment"
+          };
+
+
     await scanner.start(
 
-      {
-        facingMode:
-          "environment"
-      },
+      configuracion,
 
       {
         fps: 10,
-        qrbox: 250
+        qrbox: {
+          width: 230,
+          height: 230
+        },
+        aspectRatio: 1.0
       },
 
       texto => {
@@ -3676,15 +4351,138 @@ async function abrirScanner() {
     scannerActivo =
       true;
 
+
+    establecerEstadoScanner(
+      "● Escaneando... acerca el QR",
+      "scanning"
+    );
+
+
+    await actualizarEstadoLinterna();
+
+
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Error iniciando cámara:",
+      error
+    );
 
-    mostrarMensaje(
-      "No se pudo abrir la cámara: " +
-      error,
+
+    scannerActivo =
+      false;
+
+
+    establecerEstadoScanner(
+      "⚠ No fue posible abrir la cámara",
       "error"
     );
+
+
+    document
+      .getElementById(
+        "scannerPermission"
+      )
+      .classList
+      .add("active");
+
+
+    mostrarMensaje(
+      "No se pudo abrir la cámara. Verifica los permisos del navegador.",
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   ABRIR SCANNER
+===================================================== */
+
+async function abrirScanner() {
+
+  const modal =
+    document.getElementById(
+      "modalScanner"
+    );
+
+
+  modal
+    .classList
+    .add("active");
+
+
+  procesandoQR =
+    false;
+
+
+  linternaActiva =
+    false;
+
+
+  const resultado =
+    document.getElementById(
+      "scannerResultado"
+    );
+
+
+  resultado
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById(
+      "scannerPermission"
+    )
+    .classList
+    .remove("active");
+
+
+  if (scannerActivo)
+    return;
+
+
+  establecerEstadoScanner(
+    "● Preparando lector...",
+    "scanning"
+  );
+
+
+  try {
+
+    camarasDisponibles =
+      await Html5Qrcode.getCameras();
+
+  } catch (error) {
+
+    camarasDisponibles = [];
+
+  }
+
+
+  scanner =
+    new Html5Qrcode(
+      "reader"
+    );
+
+
+  await iniciarCamara();
+
+
+  if (
+    camarasDisponibles.length > 0
+  ) {
+
+    const boton =
+      document.getElementById(
+        "btnCambiarCamara"
+      );
+
+    boton.disabled =
+      camarasDisponibles.length < 2;
 
   }
 
@@ -3704,6 +4502,13 @@ async function cerrarScanner() {
     .remove("active");
 
 
+  procesandoQR =
+    false;
+
+  linternaActiva =
+    false;
+
+
   if (
     scanner &&
     scannerActivo
@@ -3713,11 +4518,26 @@ async function cerrarScanner() {
 
       await scanner.stop();
 
+    } catch (error) {
+
+      console.error(
+        "Error deteniendo scanner:",
+        error
+      );
+
+    }
+
+
+    try {
+
       await scanner.clear();
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Error limpiando scanner:",
+        error
+      );
 
     }
 
@@ -3728,6 +4548,42 @@ async function cerrarScanner() {
 
   scannerActivo =
     false;
+
+
+  const reader =
+    document.getElementById(
+      "reader"
+    );
+
+
+  if (reader) {
+
+    reader.innerHTML =
+      "";
+
+  }
+
+
+  document
+    .getElementById(
+      "scannerResultado"
+    )
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById(
+      "scannerPermission"
+    )
+    .classList
+    .remove("active");
+
+
+  establecerEstadoScanner(
+    "● Escaneando...",
+    "scanning"
+  );
 
 }
 
@@ -3740,15 +4596,453 @@ window.cerrarScanner =
 
 
 /* =====================================================
+   CAMBIAR CAMARA
+===================================================== */
+
+async function cambiarCamara() {
+
+  if (
+    !scanner ||
+    !scannerActivo ||
+    camarasDisponibles.length < 2
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    establecerEstadoScanner(
+      "● Cambiando cámara...",
+      "scanning"
+    );
+
+
+    await scanner.stop();
+
+
+    camaraActualIndex =
+      (
+        camaraActualIndex + 1
+      ) %
+      camarasDisponibles.length;
+
+
+    const siguiente =
+      camarasDisponibles[
+        camaraActualIndex
+      ];
+
+
+    await iniciarCamara(
+      siguiente.id
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    mostrarMensaje(
+      "No fue posible cambiar de cámara.",
+      "error"
+    );
+
+
+    try {
+
+      if (scanner) {
+
+        await iniciarCamara();
+
+      }
+
+    } catch (e) {}
+
+  }
+
+}
+
+
+window.cambiarCamara =
+  cambiarCamara;
+
+
+/* =====================================================
+   LINTERNA
+===================================================== */
+
+async function obtenerTrackVideo() {
+
+  try {
+
+    if (
+      !scanner ||
+      !scannerActivo
+    )
+      return null;
+
+
+    const elementoVideo =
+      document.querySelector(
+        "#reader video"
+      );
+
+
+    if (
+      !elementoVideo ||
+      !elementoVideo.srcObject
+    )
+      return null;
+
+
+    const tracks =
+      elementoVideo
+        .srcObject
+        .getVideoTracks();
+
+
+    if (
+      !tracks ||
+      !tracks.length
+    )
+      return null;
+
+
+    return tracks[0];
+
+  } catch (error) {
+
+    return null;
+
+  }
+
+}
+
+
+async function actualizarEstadoLinterna() {
+
+  const boton =
+    document.getElementById(
+      "btnLinterna"
+    );
+
+
+  if (!boton)
+    return;
+
+
+  const track =
+    await obtenerTrackVideo();
+
+
+  if (!track) {
+
+    boton.disabled =
+      true;
+
+    return;
+
+  }
+
+
+  try {
+
+    const capacidades =
+      track.getCapabilities
+        ? track.getCapabilities()
+        : {};
+
+
+    if (
+      !capabilitiesTorch(capacidades)
+    ) {
+
+      boton.disabled =
+        true;
+
+      boton.textContent =
+        "🔦 No disponible";
+
+      return;
+
+    }
+
+
+    boton.disabled =
+      false;
+
+    boton.textContent =
+      linternaActiva
+        ? "🔦 Apagar linterna"
+        : "🔦 Linterna";
+
+  } catch (error) {
+
+    boton.disabled =
+      true;
+
+  }
+
+}
+
+
+function capabilitiesTorch(
+  capacidades
+) {
+
+  return !!(
+    capacidades &&
+    capacidades.torch
+  );
+
+}
+
+
+async function alternarLinterna() {
+
+  const boton =
+    document.getElementById(
+      "btnLinterna"
+    );
+
+
+  try {
+
+    const track =
+      await obtenerTrackVideo();
+
+
+    if (!track) {
+
+      mostrarMensaje(
+        "La cámara todavía no está disponible.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const capacidades =
+      track.getCapabilities
+        ? track.getCapabilities()
+        : {};
+
+
+    if (
+      !capabilitiesTorch(
+        capacidades
+      )
+    ) {
+
+      mostrarMensaje(
+        "La cámara de este dispositivo no permite controlar la linterna desde el navegador.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    linternaActiva =
+      !linternaActiva;
+
+
+    await track.applyConstraints({
+
+      advanced: [
+        {
+          torch:
+            linternaActiva
+        }
+      ]
+
+    });
+
+
+    boton.textContent =
+      linternaActiva
+        ? "🔦 Apagar linterna"
+        : "🔦 Linterna";
+
+
+    boton.classList.toggle(
+      "active",
+      linternaActiva
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    linternaActiva =
+      false;
+
+
+    mostrarMensaje(
+      "No fue posible controlar la linterna en este dispositivo.",
+      "error"
+    );
+
+  }
+
+}
+
+
+window.alternarLinterna =
+  alternarLinterna;
+
+
+/* =====================================================
+   MOSTRAR RESULTADO DEL QR
+===================================================== */
+
+function mostrarResultadoScanner(
+  usuario,
+  accion
+) {
+
+  const resultado =
+    document.getElementById(
+      "scannerResultado"
+    );
+
+
+  const avatar =
+    document.getElementById(
+      "scannerAvatar"
+    );
+
+
+  const nombre =
+    document.getElementById(
+      "scannerNombre"
+    );
+
+
+  const id =
+    document.getElementById(
+      "scannerID"
+    );
+
+
+  const accionElemento =
+    document.getElementById(
+      "scannerAccion"
+    );
+
+
+  if (usuario) {
+
+    const inicial =
+      (
+        usuario.nombre ||
+        "U"
+      )
+      .trim()
+      .charAt(0)
+      .toUpperCase();
+
+
+    avatar.textContent =
+      inicial;
+
+
+    nombre.textContent =
+      usuario.nombre ||
+      "Usuario";
+
+
+    id.textContent =
+      usuario.id;
+
+
+    accionElemento.className =
+      "scanner-action " +
+      accion;
+
+
+    if (
+      accion ===
+      "entrada"
+    ) {
+
+      accionElemento.textContent =
+        "🟢 Registrando entrada...";
+
+    } else {
+
+      accionElemento.textContent =
+        "🔴 Registrando salida...";
+
+    }
+
+  } else {
+
+    avatar.textContent =
+      "?";
+
+
+    nombre.textContent =
+      "QR no registrado";
+
+
+    id.textContent =
+      idQRpendiente ||
+      "";
+
+
+    accionElemento.className =
+      "scanner-action nuevo";
+
+
+    accionElemento.textContent =
+      "⚠️ Este QR no está registrado. Abriendo registro...";
+
+  }
+
+
+  resultado
+    .classList
+    .add("active");
+
+}
+
+
+/* =====================================================
    PROCESAR QR
 ===================================================== */
 
 async function procesarQR(texto) {
 
+  if (procesandoQR)
+    return;
+
+
+  procesandoQR =
+    true;
+
+
   texto =
     String(
       texto || ""
     ).trim();
+
+
+  if (!texto) {
+
+    procesandoQR =
+      false;
+
+    return;
+
+  }
 
 
   let id =
@@ -3783,44 +5077,141 @@ async function procesarQR(texto) {
       .toUpperCase();
 
 
-  if (scannerActivo) {
-
-    await cerrarScanner();
-
-  }
-
-
   const usuario =
     usuarios.find(
       u => u.id === id
     );
 
 
-  if (!usuario) {
+  reproducirSonidoQR();
 
-    abrirRegistroQR(id);
+  vibrarQR();
+
+
+  if (usuario) {
+
+    const accion =
+      usuario.dentro
+        ? "salida"
+        : "entrada";
+
+
+    establecerEstadoScanner(
+      "✓ QR detectado correctamente",
+      "success"
+    );
+
+
+    mostrarResultadoScanner(
+      usuario,
+      accion
+    );
+
+
+    seleccionarUsuario(
+      usuario.id
+    );
+
+
+    if (scannerActivo) {
+
+      try {
+
+        await cerrarScanner();
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    }
+
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          650
+        )
+    );
+
+
+    if (usuario.dentro) {
+
+      await registrarSalida(
+        usuario
+      );
+
+    } else {
+
+      await registrarEntrada(
+        usuario
+      );
+
+    }
+
+
+    procesandoQR =
+      false;
+
 
     return;
 
   }
 
 
-  seleccionarUsuario(id);
+  /* ===================================================
+     QR DESCONOCIDO
+  =================================================== */
+
+  idQRpendiente =
+    id;
 
 
-  if (usuario.dentro) {
+  establecerEstadoScanner(
+    "⚠ QR no registrado",
+    "error"
+  );
 
-    await registrarSalida(
-      usuario
-    );
 
-  } else {
+  mostrarResultadoScanner(
+    null,
+    "nuevo"
+  );
 
-    await registrarEntrada(
-      usuario
-    );
+
+  if (scannerActivo) {
+
+    try {
+
+      await cerrarScanner();
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
 
   }
+
+
+  await new Promise(
+    resolve =>
+      setTimeout(
+        resolve,
+        700
+      )
+  );
+
+
+  abrirRegistroQR(
+    id
+  );
+
+
+  procesandoQR =
+    false;
 
 }
 
