@@ -20,6 +20,7 @@
     src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
   </script>
 
+
   <style>
 
     * {
@@ -31,6 +32,132 @@
       margin: 0;
       background: #f3f6f9;
       color: #1f2933;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* =====================================================
+       MODO NOCTURNO (ESTILOS GLOBALES)
+    ===================================================== */
+    body.dark-mode {
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+
+    body.dark-mode .card,
+    body.dark-mode .stat-card,
+    body.dark-mode .user-card,
+    body.dark-mode .modal-content,
+    body.dark-mode .login-card,
+    body.dark-mode .scanner-modal {
+      background: #1e293b;
+      color: #f1f5f9;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-mode .info-box,
+    body.dark-mode .hours-box,
+    body.dark-mode .qr-registration,
+    body.dark-mode .scanner-control,
+    body.dark-mode .scanner-result {
+      background: #334155 !important;
+      border-color: #475569 !important;
+      color: #f1f5f9;
+    }
+
+    body.dark-mode .info-box strong,
+    body.dark-mode .info-box small,
+    body.dark-mode .stat-card h3,
+    body.dark-mode .card-header h2,
+    body.dark-mode .login-card h2,
+    body.dark-mode .hours-box h3,
+    body.dark-mode .scanner-result-info strong,
+    body.dark-mode .scanner-result-info span {
+      color: #f1f5f9 !important;
+    }
+
+    body.dark-mode .stat-card .number,
+    body.dark-mode .hours-box strong,
+    body.dark-mode .qr-registration strong {
+      color: #38bdf8 !important;
+    }
+
+    body.dark-mode th {
+      background: #334155;
+      color: #cbd5e1;
+    }
+
+    body.dark-mode td {
+      border-bottom-color: #334155;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode input,
+    body.dark-mode select {
+      background: #334155;
+      color: #ffffff;
+      border-color: #475569;
+    }
+
+    body.dark-mode input::placeholder {
+      color: #94a3b8;
+    }
+
+    body.dark-mode #panelUsuario .card {
+      border-color: #334155;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-mode #panelUsuario .perfil-card {
+      background: #1e293b;
+    }
+
+    body.dark-mode #panelUsuario .perfil-avatar {
+      background: linear-gradient(145deg, #1e293b, #334155);
+      color: #38bdf8;
+      border-color: #1e293b;
+    }
+
+    body.dark-mode #panelUsuario .perfil-header h2 {
+      color: #f1f5f9;
+    }
+
+    body.dark-mode #panelUsuario .perfil-section-title {
+      color: #38bdf8;
+    }
+
+    body.dark-mode #panelUsuario .history-card th {
+      background: #334155;
+      color: #94a3b8;
+      border-bottom-color: #475569;
+    }
+
+    body.dark-mode #panelUsuario .history-card td {
+      border-bottom-color: #334155;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode #panelUsuario .history-card tbody tr:hover {
+      background: #334155;
+    }
+
+    body.dark-mode .btn-secondary {
+      background: #475569;
+      color: #f8fafc;
+    }
+
+    .theme-toggle-button {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle-button:hover {
+      background: rgba(255, 255, 255, 0.3);
     }
 
     /* =====================================================
@@ -1796,6 +1923,13 @@
 
     <div class="header-right">
 
+      <button
+        class="theme-toggle-button"
+        id="btnModoNocturno"
+        onclick="alternarModoNocturno()">
+        🌙 Modo Oscuro
+      </button>
+
       <div
         class="firebase-status"
         id="firebaseStatus">
@@ -3163,6 +3297,39 @@ const colores = [
   "#1982c4"
 
 ];
+
+
+/* =====================================================
+   MODO NOCTURNO (LÓGICA)
+===================================================== */
+
+function alternarModoNocturno() {
+  const esOscuro = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('theme', esOscuro ? 'dark' : 'light');
+  actualizarTextoBotonTema(esOscuro);
+}
+
+function actualizarTextoBotonTema(esOscuro) {
+  const boton = document.getElementById('btnModoNocturno');
+  if (boton) {
+    boton.textContent = esOscuro ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+  }
+}
+
+function cargarPreferenciaTema() {
+  const temaGuardado = localStorage.getItem('theme');
+  const prefiereOscuro = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  if (temaGuardado === 'dark' || (!temaGuardado && prefiereOscuro)) {
+    document.body.classList.add('dark-mode');
+    actualizarTextoBotonTema(true);
+  } else {
+    actualizarTextoBotonTema(false);
+  }
+}
+
+window.alternarModoNocturno = alternarModoNocturno;
+cargarPreferenciaTema();
 
 
 /* =====================================================
@@ -7524,6 +7691,8 @@ async function registrarEntradaUsuario(
   }
 
 }
+
+
 /* =====================================================
    SALIDA USUARIO
 ===================================================== */
@@ -7807,6 +7976,8 @@ async function registrarSalidaUsuario(
   }
 
 }
+
+
 /* =====================================================
    ENTRADA MANUAL
 ===================================================== */
@@ -9200,6 +9371,8 @@ function escucharPerfilUsuario(
     );
 
 }
+
+
 /* =====================================================
    HISTORIAL DEL USUARIO
 ===================================================== */
