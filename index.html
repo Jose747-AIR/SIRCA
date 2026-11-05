@@ -928,15 +928,6 @@
       box-shadow:
         0 8px 20px rgba(0,0,0,.18);
       font-size: 34px;
-      position: relative;
-      overflow: hidden;
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-    }
-
-    #panelUsuario .perfil-avatar:hover label {
-      opacity: 1 !important;
     }
 
     #panelUsuario .perfil-header h2 {
@@ -2438,23 +2429,9 @@
 
           <div
             class="perfil-avatar"
-            id="perfilAvatar"
-            title="Haz clic para cambiar tu foto de perfil"
-            onclick="document.getElementById('inputFotoPerfil').click()">
+            id="perfilAvatar">
 
             U
-
-            <label style="position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; cursor: pointer; color: white; font-size: 18px;">
-              📷
-            </label>
-
-            <input
-              type="file"
-              id="inputFotoPerfil"
-              accept="image/*"
-              class="hidden"
-              onchange="subirFotoPerfil(event)"
-            >
 
           </div>
 
@@ -2597,8 +2574,66 @@
     </div>
 
 
+    <div class="card hours-card">
+
+      <div class="card-header">
+
+        <h2>
+          Resumen de horas
+        </h2>
+
+      </div>
+
+
+      <div class="hours-summary">
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas solicitadas
+          </h3>
+
+          <strong id="misHorasSolicitadas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas acumuladas
+          </h3>
+
+          <strong id="misHorasAcumuladas">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="hours-box">
+
+          <h3>
+            Horas faltantes
+          </h3>
+
+          <strong id="misHorasFaltantes">
+            0
+          </strong>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+
     <!-- =================================================
-         LECTOR QR DEL USUARIO (AHORA PRIMERO)
+         LECTOR QR DEL USUARIO
     ================================================= -->
 
     <div class="card attendance-card">
@@ -2653,64 +2688,6 @@
         <span>
           La entrada o salida se determina automáticamente según tu estado actual.
         </span>
-
-      </div>
-
-    </div>
-
-
-    <div class="card hours-card">
-
-      <div class="card-header">
-
-        <h2>
-          Resumen de horas
-        </h2>
-
-      </div>
-
-
-      <div class="hours-summary">
-
-
-        <div class="hours-box">
-
-          <h3>
-            Horas solicitadas
-          </h3>
-
-          <strong id="misHorasSolicitadas">
-            0
-          </strong>
-
-        </div>
-
-
-        <div class="hours-box">
-
-          <h3>
-            Horas acumuladas
-          </h3>
-
-          <strong id="misHorasAcumuladas">
-            0
-          </strong>
-
-        </div>
-
-
-        <div class="hours-box">
-
-          <h3>
-            Horas faltantes
-          </h3>
-
-          <strong id="misHorasFaltantes">
-            0
-          </strong>
-
-        </div>
-
 
       </div>
 
@@ -3201,8 +3178,7 @@ import {
   limit,
   runTransaction,
   Timestamp,
-  writeBatch,
-  updateDoc
+  writeBatch
 }
 from
 "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
@@ -3448,55 +3424,6 @@ function escapeHTML(text) {
   return div.innerHTML;
 
 }
-
-
-/* =====================================================
-   SUBIR FOTO DE PERFIL (USUARIO)
-===================================================== */
-
-async function subirFotoPerfil(event) {
-  const archivo = event.target.files[0];
-  if (!archivo) return;
-
-  if (!archivo.type.startsWith("image/")) {
-    mostrarMensaje("Por favor, selecciona un archivo de imagen válido.", "error");
-    return;
-  }
-
-  try {
-    mostrarMensaje("Procesando imagen...", "success");
-
-    const fotoBase64 = await comprimirImagen(archivo, 300, 0.7);
-
-    if (fotoBase64.length > 900000) {
-      mostrarMensaje("La imagen es demasiado pesada. Elige otra.", "error");
-      return;
-    }
-
-    if (!usuarioLogueado || !usuarioLogueado.id) {
-      throw new Error("No hay un usuario autenticado.");
-    }
-
-    const usuarioRef = doc(db, "usuarios", usuarioLogueado.id);
-
-    await runTransaction(db, async transaction => {
-      const snap = await transaction.get(usuarioRef);
-      if (!snap.exists()) throw new Error("El usuario no existe en la base de datos.");
-
-      transaction.update(usuarioRef, {
-        fotoPerfil: fotoBase64
-      });
-    });
-
-    mostrarMensaje("✅ Foto de perfil actualizada correctamente.");
-
-  } catch (error) {
-    console.error("Error al actualizar la foto:", error);
-    mostrarMensaje("No se pudo actualizar la foto: " + error.message, "error");
-  }
-}
-
-window.subirFotoPerfil = subirFotoPerfil;
 
 
 /* =====================================================
@@ -8949,6 +8876,8 @@ async function iniciarUsuario() {
 
     /*
       Guardamos el UID en el documento de SIRCA.
+      Esto permite que Firestore identifique
+      inequívocamente al propietario.
     */
 
     try {
@@ -9339,28 +9268,22 @@ function actualizarPerfilUsuario(
       fechaEgreso;
 
 
-  const avatarDiv =
-    document.getElementById(
+  const inicial =
+    (
+      usuario.nombre ||
+      "U"
+    )
+    .trim()
+    .charAt(0)
+    .toUpperCase();
+
+
+  document
+    .getElementById(
       "perfilAvatar"
-    );
-
-
-  if (usuario.fotoPerfil) {
-    avatarDiv.style.backgroundImage = `url('${usuario.fotoPerfil}')`;
-    avatarDiv.style.color = "transparent";
-  } else {
-    avatarDiv.style.backgroundImage = "none";
-    avatarDiv.style.color = "";
-    const inicial =
-      (
-        usuario.nombre ||
-        "U"
-      )
-      .trim()
-      .charAt(0)
-      .toUpperCase();
-    avatarDiv.textContent = inicial;
-  }
+    )
+    .textContent =
+      inicial;
 
 }
 
@@ -9405,6 +9328,11 @@ function escucharPerfilUsuario(
 
         }
 
+
+        /*
+          IMPORTANTE:
+          Conservamos el UID de Firebase Authentication.
+        */
 
         const uidAuth =
           auth.currentUser?.uid ||
