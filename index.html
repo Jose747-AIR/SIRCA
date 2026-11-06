@@ -2440,7 +2440,7 @@
             style="position: relative; overflow: visible; background-size: cover; background-position: center; cursor: pointer;"
             onclick="document.getElementById('inputFotoPerfil').click()">
 
-            U
+            <span id="perfilInicial">U</span>
 
             <!-- Insignia visible con icono de cámara -->
             <div style="position: absolute; bottom: -2px; right: -2px; background: #155b91; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.25); z-index: 5;">
@@ -2467,6 +2467,14 @@
             <p id="perfilID">
               SIRCA-000
             </p>
+
+            <button
+              type="button"
+              class="btn-secondary"
+              style="margin-top: 9px; padding: 8px 12px; font-size: 12px;"
+              onclick="document.getElementById('inputFotoPerfil').click()">
+              📷 Cambiar foto de perfil
+            </button>
 
           </div>
 
@@ -3486,11 +3494,18 @@ async function subirFotoPerfil(event) {
       });
     });
 
+    // Actualizar también el perfil en memoria para mostrar la foto inmediatamente.
+    usuarioLogueado.fotoPerfil = fotoBase64;
+    cargarPerfilUsuario();
+
     mostrarMensaje("✅ Foto de perfil actualizada correctamente.");
 
   } catch (error) {
     console.error("Error al actualizar la foto:", error);
     mostrarMensaje("No se pudo actualizar la foto: " + error.message, "error");
+  } finally {
+    // Permite volver a elegir el mismo archivo si se necesita.
+    event.target.value = "";
   }
 }
 
@@ -9343,12 +9358,18 @@ function actualizarPerfilUsuario(
     );
 
 
+  const inicialPerfil =
+    document.getElementById("perfilInicial");
+
   if (usuario.fotoPerfil) {
     avatarDiv.style.backgroundImage = `url('${usuario.fotoPerfil}')`;
+    avatarDiv.style.backgroundSize = "cover";
+    avatarDiv.style.backgroundPosition = "center";
     avatarDiv.style.color = "transparent";
+    if (inicialPerfil) inicialPerfil.style.display = "none";
   } else {
     avatarDiv.style.backgroundImage = "none";
-    avatarDiv.style.color = "";
+    avatarDiv.style.color = "#0d3d63";
     const inicial =
       (
         usuario.nombre ||
@@ -9357,7 +9378,11 @@ function actualizarPerfilUsuario(
       .trim()
       .charAt(0)
       .toUpperCase();
-    avatarDiv.textContent = inicial;
+    // No usar avatarDiv.textContent: borraría el botón de cámara y el input file.
+    if (inicialPerfil) {
+      inicialPerfil.textContent = inicial;
+      inicialPerfil.style.display = "inline";
+    }
   }
 
 }
