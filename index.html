@@ -935,10 +935,6 @@
       cursor: pointer;
     }
 
-    #panelUsuario .perfil-avatar:hover label {
-      opacity: 1 !important;
-    }
-
     #panelUsuario .perfil-header h2 {
       font-size: 27px;
       color: #102f48;
@@ -2436,18 +2432,20 @@
 
         <div class="perfil-header">
 
-          <!-- AVATAR CON SOPORTE DE FOTO DE PERFIL -->
+          <!-- AVATAR CON BOTÓN DE CÁMARA VISIBLE PARA CAMBIAR FOTO -->
           <div
             class="perfil-avatar"
             id="perfilAvatar"
             title="Haz clic para cambiar tu foto de perfil"
+            style="position: relative; overflow: visible; background-size: cover; background-position: center; cursor: pointer;"
             onclick="document.getElementById('inputFotoPerfil').click()">
 
             U
 
-            <label style="position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; cursor: pointer; color: white; font-size: 18px;">
+            <!-- Insignia visible con icono de cámara -->
+            <div style="position: absolute; bottom: -2px; right: -2px; background: #155b91; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.25); z-index: 5;">
               📷
-            </label>
+            </div>
 
             <input
               type="file"
