@@ -573,6 +573,8 @@
       height: 42px;
       border-radius: 50%;
       flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
     }
 
     .user-card h3 {
@@ -1589,6 +1591,8 @@
       justify-content: center;
       font-weight: bold;
       font-size: 19px;
+      background-size: cover;
+      background-position: center;
     }
 
     .scanner-result-info {
@@ -4108,6 +4112,11 @@ function mostrarUsuarios() {
         "qr-" +
         usuario.id;
 
+      // Soporte para mostrar foto de perfil en la tarjeta de administración si existe
+      const avatarStyle = usuario.fotoPerfil
+        ? `background-image: url('${usuario.fotoPerfil}'); background-size: cover; background-position: center;`
+        : `background: ${usuario.color || obtenerColor(index)};`;
+
 
       div.innerHTML = `
 
@@ -4115,10 +4124,7 @@ function mostrarUsuarios() {
 
           <div
             class="user-color"
-            style="background:${
-              usuario.color ||
-              obtenerColor(index)
-            }">
+            style="${avatarStyle}">
           </div>
 
           <div>
@@ -5561,18 +5567,21 @@ function mostrarResultadoScanner(
 
   if (usuario) {
 
-    const inicial =
-      (
-        usuario.nombre ||
-        "U"
-      )
-      .trim()
-      .charAt(0)
-      .toUpperCase();
-
-
-    avatar.textContent =
-      inicial;
+    if (usuario.fotoPerfil) {
+      avatar.style.backgroundImage = `url('${usuario.fotoPerfil}')`;
+      avatar.textContent = "";
+    } else {
+      avatar.style.backgroundImage = "none";
+      const inicial =
+        (
+          usuario.nombre ||
+          "U"
+        )
+        .trim()
+        .charAt(0)
+        .toUpperCase();
+      avatar.textContent = inicial;
+    }
 
 
     nombre.textContent =
@@ -5606,6 +5615,7 @@ function mostrarResultadoScanner(
 
   } else {
 
+    avatar.style.backgroundImage = "none";
     avatar.textContent =
       "?";
 
@@ -6104,6 +6114,7 @@ async function procesarQRUsuario(
         );
 
 
+      avatar.style.backgroundImage = "none";
       avatar.textContent =
         "?";
 
